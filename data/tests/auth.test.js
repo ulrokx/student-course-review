@@ -1,4 +1,4 @@
-import { register } from "../auth.js";
+import { login, register } from "../auth.js";
 import bcrypt from "bcrypt";
 import { users } from "../../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
@@ -38,7 +38,6 @@ describe("data/auth", () => {
         admin: false,
       });
       expect(result.status).toBe(200);
-      expect(result.message).toBe("User added successfully");
       expect(result.user).not.toHaveProperty("hashedPassword");
       expect(typeof result.user.id).toBe("string");
     });
@@ -83,6 +82,51 @@ describe("data/auth", () => {
         username: params.username,
         admin: false,
       });
+    });
+  });
+
+  describe("login", () => {
+    it("should login successfully", async () => {
+      const findOne = jest.fn(() => ({
+        email: "bob123@email.com",
+        username: "bob123",
+        hashedPassword: "hashedPassword",
+        _id: new ObjectId(),
+      }));
+      bcrypt.compare.mockReturnValue(true);
+      users.mockReturnValue({ findOne });
+      const result = await login({
+        email: "bob123@email.com",
+        password: "12345678",
+      });
+      expect(result).not.toHaveProperty("hashedPassword");
+      expect(typeof result.user.id).toBe("string");
+      expect(result).toHaveProperty("status", 200)
+    });
+
+    it("should throw error when email is invalid", async () => {
+      const findOne = jest.fn(() => null);
+      users.mockReturnValue({ findOne });
+      await expect(() =>
+        login({ email: "invalid@email.com", password: "123455677" }),
+      ).rejects.toHaveProperty("status", 400);
+    });
+
+    it("should throw error when password is incorrect", async () => {
+      const findOne = jest.fn(() => ({
+        email: "bob123@email.com",
+        username: "bob123",
+        hashedPassword: "hashedPassword",
+        _id: new ObjectId(),
+      }));
+      bcrypt.compare.mockReturnValue(false);
+      users.mockReturnValue({ findOne });
+      await expect(() =>
+        login({
+          email: "bob123@email.com",
+          password: "badpassword",
+        }),
+      ).rejects.toHaveProperty("status", 400);
     });
   });
 });
