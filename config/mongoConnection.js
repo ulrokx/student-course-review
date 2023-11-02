@@ -1,5 +1,5 @@
-const MongoClient = require("mongodb").MongoClient;
-const settings = require("./settings");
+import { MongoClient } from "mongodb";
+import settings from "./settings";
 const mongoConfig = settings.mongoConfig;
 
 let _connection = undefined;
