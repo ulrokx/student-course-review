@@ -1,7 +1,13 @@
 import express from "express";
 import configRoutes from "./routes/index.js";
+import session from "express-session";
 
 const app = express();
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "necco",
+  }),
+);
 
 await configRoutes(app);
 
