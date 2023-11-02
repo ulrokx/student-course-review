@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt";
 import { users } from "../config/mongoCollections.js";
-import { idSchema, loginSchema, registerSchema } from "./validation.js";
+import { loginSchema, registerSchema } from "./validation.js";
+import stringifyId from "../util/stringifyId.js";
 
 /**
  * Register new user with email, password, and username
- * @param {Zod.infer<typeof registerSchema} params
+ * @param {Zod.infer<typeof registerSchema>} params
  */
 export const register = async (params) => {
   const parseResults = registerSchema.safeParse(params);
@@ -38,4 +39,31 @@ export const register = async (params) => {
       admin: false,
     },
   };
+};
+
+/**
+ * Login user with email and password
+ * @param {Zod.infer<typeof loginSchema>} params
+ */
+export const login = async (params) => {
+  const parseResults = loginSchema.safeParse(params);
+  if (!parseResults.success) {
+    throw { status: 400, message: parseResults.error.message };
+  }
+  const { email, password } = parseResults.data;
+  const usersCollection = await users();
+  const user = await usersCollection.findOne({ email });
+  if (!user) {
+    throw { status: 400, message: "Invalid email or password" };
+  }
+  const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
+  if (!passwordMatch) {
+    throw { status: 400, message: "Invalid email or password" };
+  }
+  delete user.hashedPassword;
+  return {
+    status: 200,
+    message: "Login successful",
+    user: stringifyId(user)
+  }
 };
