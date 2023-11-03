@@ -29,14 +29,10 @@ export const register = async (params) => {
     throw { status: 500, message: "Could not add user" };
   }
   return {
-    status: 200,
-    message: "User added successfully",
-    user: {
-      _id: insertedUser.insertedId,
-      email,
-      username,
-      admin: false,
-    },
+    _id: insertedUser.insertedId,
+    email,
+    username,
+    admin: false,
   };
 };
 
@@ -60,11 +56,7 @@ export const login = async (params) => {
     throw { status: 400, message: "Invalid email or password" };
   }
   delete user.hashedPassword;
-  return {
-    status: 200,
-    message: "Login successful",
-    user,
-  };
+  return user;
 };
 
 /**
@@ -82,5 +74,5 @@ export const getUserById = async (id) => {
     throw { status: 404, message: "User not found" };
   }
   delete user.hashedPassword;
-  return user
+  return user;
 };
