@@ -10,7 +10,7 @@ const constructorMethod = async (app) => {
     app.use(pathPrefix, router);
   });
   app.use("*", (req, res) => {
-    res.status(404).json({ error: "Route Not found" });
+    res.render("error", {status: 404, message: "Page not found"});
   });
 };
 
