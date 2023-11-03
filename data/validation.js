@@ -1,6 +1,8 @@
 import { ObjectId } from "mongodb";
 import { z } from "zod";
 
+export const idSchema = z.string().refine((val) => ObjectId.isValid(val));
+
 const usernameRegExp = new RegExp(/^[a-zA-Z0-9_]{3,16}$/);
 
 const emailSchema = z.string().trim().email();
