@@ -1,4 +1,4 @@
-import { login, register } from "../auth.js";
+import { getUserById, login, register } from "../auth.js";
 import bcrypt from "bcrypt";
 import { users } from "../../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
@@ -127,6 +127,38 @@ describe("data/auth", () => {
           password: "badpassword",
         }),
       ).rejects.toHaveProperty("status", 400);
+    });
+  });
+
+  describe("getUserById", () => {
+    it("should throw error if user not found", async () => {
+      const findOne = jest.fn(() => null);
+      const _id = new ObjectId();
+      users.mockReturnValue({ findOne });
+      await expect(() => getUserById(_id.toString())).rejects.toHaveProperty(
+        "status",
+        404,
+      );
+    });
+
+    it("should throw error if id is invalid", async () => {
+      await expect(() => getUserById("abc")).rejects.toHaveProperty(
+        "status",
+        400,
+      );
+    });
+
+    it("should return user if exists", async () => {
+      const findOne = jest.fn(() => ({
+        email: "abc@email.com",
+        hashedPassword: "secrethashed",
+        admin: false,
+        username: "abcman",
+      }));
+      const _id = new ObjectId();
+      users.mockReturnValue({ findOne });
+      const result = await getUserById(_id.toString());
+      expect(result).not.toHaveProperty("hashedPassword");
     });
   });
 });
