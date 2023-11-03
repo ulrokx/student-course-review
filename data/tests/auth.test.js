@@ -39,7 +39,7 @@ describe("data/auth", () => {
       });
       expect(result.status).toBe(200);
       expect(result.user).not.toHaveProperty("hashedPassword");
-      expect(typeof result.user.id).toBe("string");
+      expect(ObjectId.isValid(result.user._id)).toBeTruthy();
     });
 
     it("should throw an error if email is already taken", async () => {
@@ -99,9 +99,9 @@ describe("data/auth", () => {
         email: "bob123@email.com",
         password: "12345678",
       });
-      expect(result).not.toHaveProperty("hashedPassword");
-      expect(typeof result.user.id).toBe("string");
-      expect(result).toHaveProperty("status", 200)
+      expect(result.user).not.toHaveProperty("hashedPassword");
+      expect(ObjectId.isValid(result.user._id)).toBeTruthy();
+      expect(result).toHaveProperty("status", 200);
     });
 
     it("should throw error when email is invalid", async () => {
