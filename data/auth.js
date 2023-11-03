@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import { users } from "../config/mongoCollections.js";
 import { loginSchema, registerSchema } from "./validation.js";
-import stringifyId from "../util/stringifyId.js";
 
 /**
  * Register new user with email, password, and username
@@ -33,7 +32,7 @@ export const register = async (params) => {
     status: 200,
     message: "User added successfully",
     user: {
-      id: insertedUser.insertedId.toString(),
+      _id: insertedUser.insertedId,
       email,
       username,
       admin: false,
@@ -64,6 +63,6 @@ export const login = async (params) => {
   return {
     status: 200,
     message: "Login successful",
-    user: stringifyId(user)
-  }
+    user,
+  };
 };
