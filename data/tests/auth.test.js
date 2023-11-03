@@ -28,7 +28,7 @@ describe("data/auth", () => {
         password: "bob123bob",
         username: "bob123",
       };
-      const result = await register(params);
+      const user = await register(params);
       expect(findOne).toHaveBeenCalledWith({ email: params.email });
       expect(bcrypt.hash).toHaveBeenCalledWith(params.password, 10);
       expect(insertOne).toHaveBeenCalledWith({
@@ -37,9 +37,8 @@ describe("data/auth", () => {
         username: params.username,
         admin: false,
       });
-      expect(result.status).toBe(200);
-      expect(result.user).not.toHaveProperty("hashedPassword");
-      expect(ObjectId.isValid(result.user._id)).toBeTruthy();
+      expect(user).not.toHaveProperty("hashedPassword");
+      expect(ObjectId.isValid(user._id)).toBeTruthy();
     });
 
     it("should throw an error if email is already taken", async () => {
@@ -95,13 +94,12 @@ describe("data/auth", () => {
       }));
       bcrypt.compare.mockReturnValue(true);
       users.mockReturnValue({ findOne });
-      const result = await login({
+      const user = await login({
         email: "bob123@email.com",
         password: "12345678",
       });
-      expect(result.user).not.toHaveProperty("hashedPassword");
-      expect(ObjectId.isValid(result.user._id)).toBeTruthy();
-      expect(result).toHaveProperty("status", 200);
+      expect(user).not.toHaveProperty("hashedPassword");
+      expect(ObjectId.isValid(user._id)).toBeTruthy();
     });
 
     it("should throw error when email is invalid", async () => {
