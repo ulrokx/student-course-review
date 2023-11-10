@@ -1,16 +1,9 @@
-import fs from "fs";
+import authRouter from "./auth.js";
 
 const constructorMethod = async (app) => {
-  const files = fs.readdirSync("routes");
-  files.forEach(async (path) => {
-    if (path === "index.js") {
-      return;
-    }
-    const { pathPrefix, router } = await import(`./${path}`);
-    app.use(pathPrefix, router);
-  });
+  app.use("/auth", authRouter);
   app.use("*", (req, res) => {
-    res.render("error", {status: 404, message: "Page not found"});
+    res.render("error", { status: 404, message: "Page not found" });
   });
 };
 
