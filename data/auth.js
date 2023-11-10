@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { users } from "../config/mongoCollections.js";
 import { loginSchema, registerSchema, idSchema } from "./validation.js";
+import { ObjectId } from "bson";
 
 /**
  * Register new user with email, password, and username
@@ -68,8 +69,9 @@ export const getUserById = async (id) => {
   if (!parseResults.success) {
     throw { status: 400, message: parseResults.error.message };
   }
+  const _id = new ObjectId(id);
   const usersCollection = await users();
-  const user = await usersCollection.findOne({ _id: id });
+  const user = await usersCollection.findOne({ _id });
   if (!user) {
     throw { status: 404, message: "User not found" };
   }

@@ -9,7 +9,8 @@
     "start": "node app.js",
     "format": "prettier --write \"**/*.{js,handlebars}\"",
     "lint": "prettier --check \"**/*.{js,handlebars}\"",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "keywords": [],
   "author": "",
