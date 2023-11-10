@@ -1,21 +1,28 @@
 import express from "express";
 import configRoutes from "./routes/index.js";
 import session from "express-session";
-import {engine} from "express-handlebars"
+import { engine } from "express-handlebars";
+import { fileURLToPath } from "url";
+import path from "path";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
-app.engine('handlebars', engine())
-app.set('view engine', 'handlebars')
-app.set('views', './views')
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
+app.set("views", "./views");
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "necco",
   }),
 );
+app.use("/public", express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 await configRoutes(app);
-
-app.use(express.json());
 
 app.listen(3000, () => {
   console.log("We've now got a server!");
