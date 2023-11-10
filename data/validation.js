@@ -26,3 +26,21 @@ export const loginSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
+
+const universityNameRegExp = new RegExp(/[a-zA-Z'-]/);
+
+const universityNameSchema = z.string().min(10).regex(universityNameRegExp);
+
+const universityLocationRegExp = new RegExp(/[a-zA-Z',-]/);
+
+const universityLocationSchema = z
+  .string()
+  .min(3)
+  .regex(universityLocationRegExp);
+
+export const createUniversitySchema = z.object({
+  name: universityNameSchema,
+  location: universityLocationSchema,
+});
+
+export const updateUniversitySchema = createUniversitySchema.partial();
