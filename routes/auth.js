@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { loginSchema } from "../data/validation.js";
-import { login } from "../data/auth.js";
+import { loginSchema, registerSchema } from "../data/validation.js";
+import { login, register } from "../data/auth.js";
 
 const router = Router();
 
@@ -12,11 +12,31 @@ router
     const { body } = req;
     const parseResults = loginSchema.safeParse(body);
     if (!parseResults.success) {
-      return res.status(400).json({ message: "Bad request" });
+      return res
+        .status(400)
+        .json({ message: parseResults.error.issues[0].message });
     }
-    const { email, password } = parseResults.data;
     try {
-      const user = await login({ email, password });
+      const user = await login(parseResults.data);
+      req.session.user = user;
+      return res.status(200).json(user);
+    } catch (e) {
+      return res.status(e.status).send(e);
+    }
+  })
+  .get("/register", async (req, res) => {
+    res.render("register");
+  })
+  .post("/register", async (req, res) => {
+    const { body } = req;
+    const parseResults = registerSchema.safeParse(body);
+    if (!parseResults.success) {
+      return res
+        .status(400)
+        .json({ message: parseResults.error.issues[0].message });
+    }
+    try {
+      const user = await register(parseResults.data);
       req.session.user = user;
       return res.status(200).json(user);
     } catch (e) {
