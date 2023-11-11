@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "nodemon app.js",
     "start": "node app.js",
-    "format": "prettier --write \"**/*.{js,handlebars}\"",
-    "lint": "prettier --check \"**/*.{js,handlebars}\"",
+    "format": "prettier --write .",
+    "lint": "prettier --check .",
     "test": "jest",
     "test:watch": "jest --watch"
   },

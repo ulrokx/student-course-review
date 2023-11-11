@@ -1,0 +1,33 @@
+<script defer src="/public/js/admin.js"></script>
+
+<h1 class="text-center">Admin Dashboard</h1>
+<main class="container">
+  {{> university-form buttonText="Create University" }}
+  <hr />
+  <h2>Universities</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Location</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each universities}}
+      <tr>
+        <th scope="col">{{ this.name }}</th>
+        <td>{{ this.location }}</td>
+        <td>
+          <a href="/admin/university/{{ this._id }}" class="btn btn-primary"
+            >Edit</a
+          >
+          <button class="delete-btn btn btn-warning" data-id="{{ this._id }}">
+            Delete
+          </button>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</main>
