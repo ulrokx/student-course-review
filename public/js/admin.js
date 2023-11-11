@@ -16,7 +16,7 @@
     e.stopPropagation();
     if (pendingDeleteId === e.target.dataset.id) {
       await $.ajax({
-        url: `/admin/university/${e.target.dataset.id}`,
+        url: `/admin/universities/${e.target.dataset.id}`,
         method: "DELETE",
       }).promise();
       window.location.reload();
@@ -51,7 +51,7 @@
 
     try {
       const result = await $.ajax({
-        url: "/admin/university",
+        url: "/admin/universities",
         method: "POST",
         data: JSON.stringify({ name, location }),
         contentType: "application/json",

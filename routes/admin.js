@@ -21,7 +21,7 @@ router
     const universities = await getUniversities();
     return res.render("admin", { universities });
   })
-  .get("/university/:id", async (req, res) => {
+  .get("/universities/:id", async (req, res) => {
     const { id } = req.params;
     try {
       const university = await getUniversity(id);
@@ -30,7 +30,7 @@ router
       return res.status(e.status).send(e);
     }
   })
-  .post("/university", async (req, res) => {
+  .post("/universities", async (req, res) => {
     const { name, location } = req.body;
     try {
       const university = await createUniversity({ name, location });
@@ -39,7 +39,7 @@ router
       return res.status(e.status).send(e);
     }
   })
-  .patch("/university/:id", async (req, res) => {
+  .patch("/universities/:id", async (req, res) => {
     const { id } = req.params;
     const { name, location } = req.body;
     try {
@@ -50,7 +50,7 @@ router
       return res.status(e.status).send(e);
     }
   })
-  .delete("/university/:id", async (req, res) => {
+  .delete("/universities/:id", async (req, res) => {
     const { id } = req.params;
     try {
       await deleteUniversity(id);
