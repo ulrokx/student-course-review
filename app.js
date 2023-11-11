@@ -5,12 +5,18 @@ import { engine } from "express-handlebars";
 import { fileURLToPath } from "url";
 import path from "path";
 import { dirname } from "path";
+import Handlebars from "handlebars";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-app.engine("handlebars", engine());
+app.engine(
+  "handlebars",
+  engine({
+    partialsDir: [path.join(__dirname, "views/partials")],
+  }),
+);
 app.set("view engine", "handlebars");
 app.set("views", "./views");
 app.use(

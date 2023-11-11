@@ -11,6 +11,20 @@ export const getUniversities = async () => {
   return universitiesCollection.find().toArray();
 };
 
+export const getUniversity = async (id) => {
+  const parseResults = idSchema.safeParse(id);
+  if (!parseResults.success) {
+    throw { status: 400, message: "Invalid id" };
+  }
+  const universitiesCollection = await universities();
+  const _id = new ObjectId(id);
+  const university = await universitiesCollection.findOne({ _id });
+  if (!university) {
+    throw { status: 404, message: "University not found" };
+  }
+  return university;
+};
+
 export const createUniversity = async (params) => {
   const parseResults = createUniversitySchema.safeParse(params);
   if (!parseResults.success) {
@@ -47,7 +61,7 @@ export const deleteUniversity = async (id) => {
     throw { status: 404, message: "University not found" };
   }
   const deleteResult = await universitiesCollection.deleteOne({ _id });
-  if ( deleteResult.deletedCount === 0) {
+  if (deleteResult.deletedCount === 0) {
     throw { status: 500, message: "Could not delete university" };
   }
   return true;
@@ -59,23 +73,26 @@ export const updateUniversity = async (id, params) => {
     throw { status: 400, message: parseResults.error.issues[0].message };
   }
   const universitiesCollection = await universities();
-  const _id = new ObjectId(id)
+  const _id = new ObjectId(id);
   const university = await universitiesCollection.findOne({ _id });
   if (!university) {
     throw { status: 404, message: "University not found" };
   }
   const existingUniversity = await universitiesCollection.findOne({
     name: parseResults.data.name,
-  })
-  if (existingUniversity && !existingUniversity._id.equals(_id)) {
+  });
+  if (existingUniversity && !existingUniversity._id.equals(_id.toString())) {
     throw { status: 400, message: "University already exists" };
   }
-  delete parseResults.data.id
-  const updatedUniversity = await universitiesCollection.updateOne({
-    _id
-  }, {$set: parseResults.data})
+  delete parseResults.data.id;
+  const updatedUniversity = await universitiesCollection.updateOne(
+    {
+      _id,
+    },
+    { $set: parseResults.data },
+  );
   if (updatedUniversity.modifiedCount === 0) {
-    throw {status: 500, message: "Could not update university"}
+    throw { status: 500, message: "Could not update university" };
   }
-  return universitiesCollection.findOne({_id})
+  return universitiesCollection.findOne({ _id });
 };

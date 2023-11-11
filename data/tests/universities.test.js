@@ -3,6 +3,7 @@ import {
   createUniversity,
   deleteUniversity,
   updateUniversity,
+  getUniversity,
 } from "../universities.js";
 import { universities } from "../../config/mongoCollections.js";
 import { ObjectId } from "bson";
@@ -25,6 +26,36 @@ describe("data/universities", () => {
       });
       const result = await getUniversities();
       expect(result).toEqual([university]);
+    });
+  });
+
+  describe("getUniversity", () => {
+    it("should get a university", async () => {
+      const _id = new ObjectId();
+      const university = {
+        _id,
+        name: "Stevens Institute of Technology",
+        location: "Hoboken, NJ",
+      };
+      const findOne = jest.fn(() => university);
+      universities.mockReturnValue({
+        findOne,
+      });
+      const result = await getUniversity(_id.toString());
+      expect(findOne).toHaveBeenCalledWith({ _id });
+      expect(result).toEqual(university);
+    });
+
+    it("should throw an error if university not found", async () => {
+      const findOne = jest.fn(() => null);
+      universities.mockReturnValue({
+        findOne,
+      });
+      const _id = new ObjectId();
+      await expect(() => getUniversity(_id.toString())).rejects.toHaveProperty(
+        "status",
+        404,
+      );
     });
   });
 
@@ -101,7 +132,7 @@ describe("data/universities", () => {
         return { deletedCount: 1 };
       });
       universities.mockReturnValue({
-      findOne,
+        findOne,
         deleteOne,
       });
       const result = await deleteUniversity(_id.toString());
@@ -212,19 +243,20 @@ describe("data/universities", () => {
 
     it("should throw an error if university with name already exists", async () => {
       const _id = new ObjectId();
-      const findOne = jest.fn(({_id}) => { // TODO: figure out why mocking findOne doesn't work
+      const findOne = jest.fn(({ _id }) => {
+        // TODO: figure out why mocking findOne doesn't work
         if (_id) {
           return {
             _id,
             name: "Stevens Institute of Technology",
             location: "Hoboken, NJ",
-          }
+          };
         }
         return {
           _id: new ObjectId(),
           name: "Rutgers University",
           location: "New Brunswick, NJ",
-        }
+        };
       });
       universities.mockImplementation(() => ({
         findOne,
@@ -237,6 +269,5 @@ describe("data/universities", () => {
         updateUniversity(_id.toString(), params),
       ).rejects.toHaveProperty("status", 400);
     });
-
   });
 });

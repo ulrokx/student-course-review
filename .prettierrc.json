@@ -1,0 +1,11 @@
+{
+  "filepath": "**/*.{js,handlebars,json}",
+  "overrides": [
+    {
+      "files": "**/*.handlebars",
+      "options": {
+        "parser": "angular"
+      }
+    }
+  ]
+}
