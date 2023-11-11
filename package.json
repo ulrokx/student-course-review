@@ -10,7 +10,9 @@
     "format": "prettier --write .",
     "lint": "prettier --check .",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "seed": "node ./config/seed/seed.js",
+    "postinstall": "npm run seed"
   },
   "keywords": [],
   "author": "",
