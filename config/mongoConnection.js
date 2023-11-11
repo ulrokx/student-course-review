@@ -5,6 +5,9 @@ const mongoConfig = settings.mongoConfig;
 let _connection = undefined;
 let _db = undefined;
 
+/**
+ * @returns {Promise<MongoClient>}
+ */
 export default async () => {
   if (!_connection) {
     _connection = await MongoClient.connect(mongoConfig.serverUrl);
