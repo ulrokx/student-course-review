@@ -45,8 +45,7 @@ export const createUniversitySchema = z.object({
 
 export const updateUniversitySchema = createUniversitySchema.partial();
 
-const exportedMethods = {
-  checkSearch(search) {
+export function checkSearch(search) {
     if (!search) {
       throw "Error: Must include a valid search term";
     }
@@ -59,8 +58,8 @@ const exportedMethods = {
     }
 
     return search;
-  },
-  checkId(id) {
+  };
+  export function checkId(id) {
     if (!id) {
       throw "Error: id does not exist";
     }
@@ -74,6 +73,18 @@ const exportedMethods = {
     if (!ObjectId.isValid(id)) {
       throw "Error: invalid ID";
     }
-  },
-};
-export default exportedMethods;
+  }
+
+const courseCodeSchema = z.string().min(3).max(10);
+
+const courseNameSchema = z.string().min(3).max(40);
+
+const professorsSchema = z.array(z.string().min(3).max(40));
+
+export const createCourseSchema = z.object({
+  courseCode: courseCodeSchema,
+  courseName: courseNameSchema,
+  professors: professorsSchema,
+});
+
+export const updateCourseSchema = createCourseSchema.partial();
