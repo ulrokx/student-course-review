@@ -1,0 +1,14 @@
+<title>Universities Found</title>
+<link rel="stylesheet" href="/public/site.css">
+<h1>Universities Found</h1>
+<h2>{{search}}</h2>
+<main>
+<ol>
+  {{#each universitySearchResult}}
+    <li>
+      <a href="search-universities/{{this.id}}">{{this.name}}</a>
+    </li>
+  {{/each}}
+</ol>
+</main>
+<a href="/">Make Another Search</a>
