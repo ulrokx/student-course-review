@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>University Details</title>
+</head>
+<body>
+    <h1>{{universityById.name}}</h1>
+    <h2>{{universityById.location}}</h2>
+    <h2>Courses:</h2>
+    <ul>
+        {{#each universityById.courses}}
+            <li>{{this}}</li>
+        {{/each}}
+    </ul>
+</body>
+<a href="/">Search for Another University</a>
+</html>
