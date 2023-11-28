@@ -45,35 +45,7 @@ export const createUniversitySchema = z.object({
 
 export const updateUniversitySchema = createUniversitySchema.partial();
 
-export function checkSearch(search) {
-    if (!search) {
-      throw "Error: Must include a valid search term";
-    }
-    if (typeof search != "string") {
-      throw "Error: Must be a string";
-    }
-    search = search.trim();
-    if (search === "") {
-      throw "Error: Empty String";
-    }
-
-    return search;
-  };
-  export function checkId(id) {
-    if (!id) {
-      throw "Error: id does not exist";
-    }
-    if (typeof id !== "string") {
-      throw "Error: Id must be a string";
-    }
-    if (id.trim().length === 0) {
-      throw "Error: id is empty";
-    }
-    id = id.trim();
-    if (!ObjectId.isValid(id)) {
-      throw "Error: invalid ID";
-    }
-  }
+export const searchUniversitySchema = z.string().trim().min(3);
 
 const courseCodeSchema = z.string().min(3).max(10);
 

@@ -52,7 +52,9 @@ export const getCourses = async (universityId) => {
     throw { status: 400, message: "Invalid id" };
   }
   const coursesCollection = await courses();
-  return coursesCollection.find({ universityId: new ObjectId(universityId) }).toArray();
+  return coursesCollection
+    .find({ universityId: new ObjectId(universityId) })
+    .toArray();
 };
 
 export const getCourse = async (universityId, id) => {
