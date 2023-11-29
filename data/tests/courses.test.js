@@ -3,6 +3,7 @@ import { courses, universities } from "../../config/mongoCollections.js";
 import {
   createCourse,
   deleteCourse,
+  getCourse,
   getCourses,
   updateCourse,
 } from "../courses.js";
@@ -251,6 +252,30 @@ describe("data/courses", () => {
       expect(() =>
         deleteCourse(new ObjectId().toString()),
       ).rejects.toHaveProperty("status", 404);
+    });
+  });
+
+  describe("getCourse", () => {
+    it("should get a course", async () => {
+      const findOne = jest.fn().mockResolvedValue({
+        _id: new ObjectId(),
+      });
+      courses.mockResolvedValue({
+        findOne,
+      });
+      const course = await getCourse(new ObjectId().toString());
+      expect(course).toHaveProperty("_id");
+    });
+
+    it("should throw error if course does not exist", async () => {
+      const findOne = jest.fn().mockResolvedValue(null);
+      courses.mockResolvedValue({
+        findOne,
+      });
+      expect(() => getCourse(new ObjectId().toString())).rejects.toHaveProperty(
+        "status",
+        404,
+      );
     });
   });
 });
