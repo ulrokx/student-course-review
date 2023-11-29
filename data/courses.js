@@ -57,14 +57,14 @@ export const getCourses = async (universityId) => {
     .toArray();
 };
 
-export const getCourse = async (universityId, id) => {
+export const getCourse = async (id) => {
   const parseResults = idSchema.safeParse(id);
   if (!parseResults.success) {
     throw { status: 400, message: "Invalid id" };
   }
   const coursesCollection = await courses();
   const _id = new ObjectId(id);
-  const course = await coursesCollection.findOne({ _id, universityId });
+  const course = await coursesCollection.findOne({ _id });
   if (!course) {
     throw { status: 404, message: "Course not found" };
   }

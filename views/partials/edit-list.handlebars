@@ -1,0 +1,10 @@
+<div>
+  <label for="{{ list - id }}-input">{{ label }}</label>
+  <input type="text" id="{{ list - id }}-input" />
+  <ul class="list-group">
+    {{#each items }}
+    {{!-- TODO: Add functionality to this list component --}}
+    <li class="list-group-item">{{ this }}</li>
+    {{/each}}
+  </ul>
+</div>
