@@ -4,5 +4,29 @@
 <main class="container">
   {{> university-form formId=create buttonText="Edit University" }}
   <hr />
-  TODO: put courses table here
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Course Code</th>
+        <th scope="col">Course Name</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each courses }}
+      <tr>
+        <th scope="col">{{ this.courseCode }}</th>
+        <td>{{ this.courseName }}</td>
+        <td>
+          <a href="/admin/courses/{{ this._id }}/" class="btn btn-primary"
+            >Edit</a
+          >
+          <button class="delete-btn btn btn-warning" data-id="{{ this._id }}">
+            Delete
+          </button>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
 </main>

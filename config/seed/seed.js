@@ -23,7 +23,7 @@ await usersCollection.insertOne({
   username: "student",
 });
 
-const {insertedId: universityId} = await universitiesCollection.insertOne({
+const { insertedId: universityId } = await universitiesCollection.insertOne({
   name: "Stevens Institute of Technology",
   location: "Hoboken, NJ",
 });
@@ -43,21 +43,21 @@ await coursesSelection.insertOne({
   courseName: "Web Programming",
   professors: ["Patrick Hill"],
   universityId,
-})
+});
 
 await coursesSelection.insertOne({
   courseCode: "CS 554",
   courseName: "Web Programming II",
   professors: ["Patrick Hill"],
   universityId,
-})
+});
 
 await coursesSelection.insertOne({
   courseCode: "CS 382",
   courseName: "Computer Architecture",
   professors: ["Shudong Hao"],
   universityId,
-})
+});
 
 console.info("✅ Seeding complete");
 

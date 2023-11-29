@@ -5,7 +5,7 @@ import { engine } from "express-handlebars";
 import { fileURLToPath } from "url";
 import path from "path";
 import { dirname } from "path";
-import Handlebars from "handlebars"
+import Handlebars from "handlebars";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -17,12 +17,12 @@ app.engine(
     partialsDir: [path.join(__dirname, "views/partials")],
     helpers: {
       asJSON: (obj, spacing) => {
-      if (typeof spacing === 'number')
-        return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
+        if (typeof spacing === "number")
+          return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
 
-      return new Handlebars.SafeString(JSON.stringify(obj));
-    }
-    }
+        return new Handlebars.SafeString(JSON.stringify(obj));
+      },
+    },
   }),
 );
 app.set("view engine", "handlebars");

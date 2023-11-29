@@ -6,6 +6,7 @@ import {
   updateUniversity,
   deleteUniversity,
 } from "../data/universities.js";
+import { getCourses } from "../data/courses.js";
 
 const router = Router();
 router.use((req, res, next) => {
@@ -25,7 +26,8 @@ router
     const { id } = req.params;
     try {
       const university = await getUniversity(id);
-      return res.render("edit-university", { university });
+      const courses = await getCourses(id);
+      return res.render("edit-university", { university, courses });
     } catch (e) {
       return res.status(e.status).send(e);
     }
@@ -58,6 +60,9 @@ router
     } catch (e) {
       return res.status(e.status).send(e);
     }
-  });
+  })
+  .get("/courses/:id", async (req, res) => {
+    return res.render("edit-course")
+  })
 
 export default router;
