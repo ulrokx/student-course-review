@@ -1,0 +1,23 @@
+<form id="course-form">
+  <label for="name-input" class="form-label">Course Name</label>
+  <input
+    value="{{ course.courseName }}"
+    type="text"
+    name="name"
+    id="name-input"
+    class="form-control"
+  />
+  <label for="location-input" class="form-label">Course Code</label>
+  <input
+    value="{{ course.courseCode }}"
+    type="text"
+    name="location"
+    id="location-input"
+    class="form-control"
+  />
+  {{> edit-list list-id="professors" label="Professors" items=course.professors}}
+  <button id="course-form-submit" type="submit" class="btn btn-primary mt-3">
+    {{ buttonText }}
+  </button>
+  <p id="course-form-error"></p>
+</form>

@@ -6,7 +6,7 @@ import {
   updateUniversity,
   deleteUniversity,
 } from "../data/universities.js";
-import { getCourses } from "../data/courses.js";
+import { getCourse, getCourses } from "../data/courses.js";
 
 const router = Router();
 router.use((req, res, next) => {
@@ -62,7 +62,13 @@ router
     }
   })
   .get("/courses/:id", async (req, res) => {
-    return res.render("edit-course")
-  })
+    const { id } = req.params;
+    try {
+      const course = await getCourse(id);
+      return res.render("edit-course", { course });
+    } catch (e) {
+      return res.status(e.status).render("error", e);
+    }
+  });
 
 export default router;
