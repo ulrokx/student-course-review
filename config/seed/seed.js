@@ -1,9 +1,10 @@
-import { universities, users } from "../mongoCollections.js";
+import { courses, universities, users } from "../mongoCollections.js";
 import getDb from "../mongoConnection.js";
 import bcrypt from "bcrypt";
 
 const usersCollection = await users();
 const universitiesCollection = await universities();
+const coursesSelection = await courses();
 
 usersCollection.drop();
 universitiesCollection.drop();
@@ -22,7 +23,7 @@ await usersCollection.insertOne({
   username: "student",
 });
 
-await universitiesCollection.insertOne({
+const {insertedId: universityId} = await universitiesCollection.insertOne({
   name: "Stevens Institute of Technology",
   location: "Hoboken, NJ",
 });
@@ -36,6 +37,27 @@ await universitiesCollection.insertOne({
   name: "New Jersey Institute of Technology",
   location: "Newark, NJ",
 });
+
+await coursesSelection.insertOne({
+  courseCode: "CS 546",
+  courseName: "Web Programming",
+  professors: ["Patrick Hill"],
+  universityId,
+})
+
+await coursesSelection.insertOne({
+  courseCode: "CS 554",
+  courseName: "Web Programming II",
+  professors: ["Patrick Hill"],
+  universityId,
+})
+
+await coursesSelection.insertOne({
+  courseCode: "CS 382",
+  courseName: "Computer Architecture",
+  professors: ["Shudong Hao"],
+  universityId,
+})
 
 console.info("✅ Seeding complete");
 
