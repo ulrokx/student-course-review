@@ -1,7 +1,6 @@
 import { Router } from "express";
-import universityData from "../data/search.js";
-import { getUniversity } from "../data/universities.js";
 import { searchUniversitySchema } from "../data/validation.js";
+import { searchUniversity } from "../data/search.js";
 const router = Router();
 
 router.get("/", async (req, res) => {
@@ -23,7 +22,7 @@ router.route("/search-universities").get(async (req, res) => {
   }
   try {
     const searchQuery = parseResults.data;
-    const searchResults = await universityData.searchUniversity(searchQuery);
+    const searchResults = await searchUniversity(searchQuery);
     if (searchResults.length == 0) {
       return res.status(404).render("error", {
         errorMessage1: "No results were found for " + searchQuery,
