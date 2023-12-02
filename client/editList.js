@@ -20,7 +20,7 @@ export const useEditList = (id, onChange) => {
     e.preventDefault();
     e.stopPropagation();
     $(e.target).closest("li").remove();
-    onChange();
+    onChange && onChange();
   };
 
   list.find("li").find("button").on("click", remove);
@@ -40,7 +40,7 @@ export const useEditList = (id, onChange) => {
           $("<span>").text(item).addClass("ml-2"),
         ]),
     );
-    onChange();
+    onChange && onChange();
   };
 
   addButton.on("click", (e) => {

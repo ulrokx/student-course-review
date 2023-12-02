@@ -6,8 +6,18 @@ import {
   updateUniversity,
   deleteUniversity,
 } from "../data/universities.js";
-import { getCourse, getCourses, updateCourse } from "../data/courses.js";
-import { updateCourseSchema } from "../data/validation.js";
+import {
+  createCourse,
+  deleteCourse,
+  getCourse,
+  getCourses,
+  updateCourse,
+} from "../data/courses.js";
+import {
+  createCourseSchema,
+  idSchema,
+  updateCourseSchema,
+} from "../data/validation.js";
 
 const router = Router();
 router.use((req, res, next) => {
@@ -79,6 +89,36 @@ router
     }
     try {
       const course = await updateCourse(id, req.body);
+      return res.status(200).json(course);
+    } catch (e) {
+      return res.status(e.status).send(e);
+    }
+  })
+  .delete("/courses/:id", async (req, res) => {
+    const { id } = req.params;
+    const parseResults = idSchema.safeParse(id);
+    if (!parseResults.success) {
+      return res.status(400).json(parseResults.error);
+    }
+    try {
+      await deleteCourse(id);
+      return res.status(200).json({ message: "Course deleted" });
+    } catch (e) {
+      return res.status(e.status).send(e);
+    }
+  })
+  .post("/universities/:id", async (req, res) => {
+    const { id } = req.params;
+    let parseResults = createCourseSchema.safeParse(req.body);
+    if (!parseResults.success) {
+      return res.status(400).json(parseResults.error);
+    }
+    parseResults = idSchema.safeParse(id);
+    if (!parseResults.success) {
+      return res.status(400).json(parseResults.error);
+    }
+    try {
+      const course = await createCourse(id, req.body);
       return res.status(200).json(course);
     } catch (e) {
       return res.status(e.status).send(e);

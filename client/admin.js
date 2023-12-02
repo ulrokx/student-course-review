@@ -1,4 +1,5 @@
 import jQuery from "jquery";
+import { useConfirmDelete } from "./confirmDelete.js";
 
 (($) => {
   const createUniversityError = $("#university-form-error");
@@ -12,25 +13,12 @@ import jQuery from "jquery";
     createUniversityError.text("");
   };
 
-  let pendingDeleteId = undefined;
-
-  $(".delete-btn").on("click", async (e) => {
-    e.stopPropagation();
-    if (pendingDeleteId === e.target.dataset.id) {
-      await $.ajax({
-        url: `/admin/universities/${e.target.dataset.id}`,
-        method: "DELETE",
-      }).promise();
-      window.location.reload();
-    } else {
-      $(".delete-btn").text("Delete");
-      $(".delete-btn").removeClass("btn-danger");
-      $(".delete-btn").addClass("btn-warning");
-      pendingDeleteId = e.target.dataset.id;
-      e.target.innerText = "Confirm Delete";
-      e.target.classList.add("btn-danger");
-      e.target.classList.remove("btn-warning");
-    }
+  useConfirmDelete(".delete-btn", async (id) => {
+    await $.ajax({
+      url: `/admin/universities/${id}`,
+      method: "DELETE",
+    }).promise();
+    window.location.reload();
   });
 
   $(document).on("click", async (e) => {
