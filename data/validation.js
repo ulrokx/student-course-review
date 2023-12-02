@@ -1,7 +1,7 @@
-import { ObjectId } from "mongodb";
+import ObjectID from "bson-objectid";
 import { z } from "zod";
 
-export const idSchema = z.string().refine((val) => ObjectId.isValid(val));
+export const idSchema = z.string().refine((val) => ObjectID.isValid(val));
 
 const usernameRegExp = new RegExp(/^[a-zA-Z0-9_]{3,16}$/);
 
@@ -51,7 +51,7 @@ const courseCodeSchema = z.string().min(3).max(10);
 
 const courseNameSchema = z.string().min(3).max(40);
 
-const professorsSchema = z.array(z.string().min(3).max(40));
+const professorsSchema = z.array(z.string().min(3).max(40)).min(1);
 
 export const createCourseSchema = z.object({
   courseCode: courseCodeSchema,

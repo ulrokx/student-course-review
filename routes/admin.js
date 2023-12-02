@@ -6,7 +6,8 @@ import {
   updateUniversity,
   deleteUniversity,
 } from "../data/universities.js";
-import { getCourse, getCourses } from "../data/courses.js";
+import { getCourse, getCourses, updateCourse } from "../data/courses.js";
+import { updateCourseSchema } from "../data/validation.js";
 
 const router = Router();
 router.use((req, res, next) => {
@@ -68,6 +69,19 @@ router
       return res.render("edit-course", { course });
     } catch (e) {
       return res.status(e.status).render("error", e);
+    }
+  })
+  .patch("/courses/:id", async (req, res) => {
+    const { id } = req.params;
+    const parseResults = updateCourseSchema.safeParse(req.body);
+    if (!parseResults.success) {
+      return res.status(400).json(parseResults.error);
+    }
+    try {
+      const course = await updateCourse(id, req.body);
+      return res.status(200).json(course);
+    } catch (e) {
+      return res.status(e.status).send(e);
     }
   });
 
