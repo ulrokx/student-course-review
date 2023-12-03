@@ -1,0 +1,27 @@
+<main class="container">
+  <h1 class="text-center">Search for courses</h1>
+  <form action="/courses" method="GET">
+    <label for="search-universities-input">Course name or code</label>
+    <input
+      type="text"
+      name="search"
+      id="search-course-input"
+      value="{{ search }}"
+    />
+  </form>
+  <hr />
+  <div class="container">
+    {{#if search}}
+    <h2>Search results for "{{ search }}"</h2>
+    {{/if}}
+    {{#each courses as |course|}}
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ course.courseName }}</h5>
+        <p class="card-subtitle">{{ course.courseCode }}</p>
+        <p class="card-text">{{ course.professors }}</p>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</main>

@@ -46,6 +46,11 @@ export const createCourse = async (universityId, params) => {
   };
 };
 
+export const getAllCourses = async () => {
+  const coursesCollection = await courses();
+  return coursesCollection.find({}).toArray();
+};
+
 export const getCourses = async (universityId) => {
   const parseResults = idSchema.safeParse(universityId);
   if (!parseResults.success) {

@@ -41,7 +41,7 @@ await universitiesCollection.insertOne({
 await coursesSelection.insertOne({
   courseCode: "CS 546",
   courseName: "Web Programming",
-  professors: ["Patrick Hill"],
+  professors: ["Patrick Hill", "Michael Phelps"],
   universityId,
 });
 

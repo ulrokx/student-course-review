@@ -47,6 +47,8 @@ export const updateUniversitySchema = createUniversitySchema.partial();
 
 export const searchUniversitySchema = z.string().trim().min(3);
 
+export const searchCourseSchema = z.string().trim().min(2);
+
 const courseCodeSchema = z.string().min(3).max(10);
 
 const courseNameSchema = z.string().min(3).max(40);

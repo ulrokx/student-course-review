@@ -1,0 +1,16 @@
+<title>Student Course Review</title>
+<main>
+  <h1>Find Your University</h1>
+  <link rel="stylesheet" href="/public/site.css" />
+  <p>Use the search bar below to search for your university.</p>
+  <form method="GET" action="/universities">
+    <label for="universities-search-input">Search for a university:</label>
+    <input type="text" id="universities-search-input" name="search" />
+    <input type="submit" value="Search" />
+  </form>
+  <form method="GET" action="/courses">
+    <label for="courses-search-input">Search for a course:</label>
+    <input type="text" id="courses-search-input" name="search" />
+    <input type="submit" value="search" />
+  </form>
+</main>
