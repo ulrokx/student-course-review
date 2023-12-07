@@ -4,6 +4,13 @@ import { login, register } from "../data/auth.js";
 
 const router = Router();
 
+router.use((req, res, next) => {
+  if (req.session.user && req.url !== "/logout") {
+    return res.redirect("/");
+  }
+  next();
+});
+
 router
   .get("/login", async (req, res) => {
     res.render("login");
@@ -19,7 +26,7 @@ router
     try {
       const user = await login(parseResults.data);
       req.session.user = user;
-      return res.status(200).json(user);
+      return res.redirect("/");
     } catch (e) {
       return res.status(e.status).send(e);
     }
@@ -36,12 +43,15 @@ router
         .json({ message: parseResults.error.issues[0].message });
     }
     try {
-      const user = await register(parseResults.data);
-      req.session.user = user;
-      return res.status(200).json(user);
+      await register(parseResults.data);
+      return res.redirect("/auth/login");
     } catch (e) {
       return res.status(e.status).send(e);
     }
+  })
+  .get("/logout", async (req, res) => {
+    req.session.destroy();
+    return res.redirect("/");
   });
 
 export default router;

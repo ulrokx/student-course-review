@@ -35,6 +35,22 @@ app.use(
 app.use("/public", express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use((req, res, next) => {
+  if (req.session.user) {
+    res.locals.user = req.session.user;
+    res.locals.isLoggedIn = true;
+    res.locals.isAdmin = req.session.user.admin;
+  }
+  next();
+});
+app.use((req, res, next) => {
+  console.log(
+    `[${new Date().toUTCString()}]: ${req.method} ${req.originalUrl} (role: ${
+      req.session.user?.admin ? "admin" : "user"
+    })`,
+  );
+  next();
+});
 
 await configRoutes(app);
 

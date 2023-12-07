@@ -4,10 +4,11 @@ import bcrypt from "bcrypt";
 
 const usersCollection = await users();
 const universitiesCollection = await universities();
-const coursesSelection = await courses();
+const coursesCollection = await courses();
 
 usersCollection.drop();
 universitiesCollection.drop();
+coursesCollection.drop();
 
 console.info("🌱 Begin seeding database");
 
@@ -15,6 +16,7 @@ await usersCollection.insertOne({
   email: "admin@stevens.edu",
   hashedPassword: bcrypt.hashSync("admin123", 10),
   username: "admin",
+  admin: true,
 });
 
 await usersCollection.insertOne({
@@ -38,21 +40,21 @@ await universitiesCollection.insertOne({
   location: "Newark, NJ",
 });
 
-await coursesSelection.insertOne({
+await coursesCollection.insertOne({
   courseCode: "CS 546",
   courseName: "Web Programming",
   professors: ["Patrick Hill", "Michael Phelps"],
   universityId,
 });
 
-await coursesSelection.insertOne({
+await coursesCollection.insertOne({
   courseCode: "CS 554",
   courseName: "Web Programming II",
   professors: ["Patrick Hill"],
   universityId,
 });
 
-await coursesSelection.insertOne({
+await coursesCollection.insertOne({
   courseCode: "CS 382",
   courseName: "Computer Architecture",
   professors: ["Shudong Hao"],

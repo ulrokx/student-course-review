@@ -21,10 +21,11 @@ import {
 
 const router = Router();
 router.use((req, res, next) => {
-  // TODO: create admin account with migration
-  // if (req.session.user.role !== "admin") {
-  //     return res.status(403).render("error", { status: 403, message: "Forbidden" });
-  // }
+  if (!req.session.user?.admin) {
+    return res
+      .status(403)
+      .render("error", { status: 403, message: "Forbidden" });
+  }
   return next();
 });
 
