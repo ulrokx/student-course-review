@@ -10,7 +10,7 @@
     />
   </form>
   <hr />
-  <div class="container">
+  <div class="container vstack gap-2">
     {{#if search}}
     <h2>Search results for "{{ search }}"</h2>
     {{/if}}
@@ -20,6 +20,11 @@
         <h5 class="card-title">{{ course.courseName }}</h5>
         <p class="card-subtitle">{{ course.courseCode }}</p>
         <p class="card-text">{{ course.professors }}</p>
+        <a
+          class="btn btn-primary stretched-link"
+          href="/courses/{{ course._id }}"
+          >View Course</a
+        >
       </div>
     </div>
     {{/each}}
