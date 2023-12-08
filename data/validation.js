@@ -1,7 +1,12 @@
 import ObjectID from "bson-objectid";
 import { z } from "zod";
 
-export const idSchema = z.string().refine((val) => ObjectID.isValid(val));
+export const idSchema = z
+  .string()
+  .trim()
+  .refine((val) => ObjectID.isValid(val), {
+    message: "Invalid id",
+  });
 
 const usernameRegExp = new RegExp(/^[a-zA-Z0-9_]{3,16}$/);
 
@@ -62,3 +67,20 @@ export const createCourseSchema = z.object({
 });
 
 export const updateCourseSchema = createCourseSchema.partial();
+
+const reviewRatingSchema = z.number().int().min(1).max(10);
+
+const reviewContentSchema = z.string().min(10).max(500);
+
+export const createReviewSchema = z.object({
+  rating: reviewRatingSchema,
+  content: reviewContentSchema,
+  courseId: idSchema,
+});
+
+const voteSchema = z.enum(["upvote", "downvote", "novote"]);
+
+export const updateVoteSchema = z.object({
+  vote: voteSchema,
+  reviewId: idSchema,
+});

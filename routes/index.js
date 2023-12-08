@@ -3,6 +3,7 @@ import adminRouter from "./admin.js";
 import searchRouter from "./search.js";
 import universitiesRouter from "./universities.js";
 import coursesRouter from "./courses.js";
+import reviewsRouter from "./reviews.js";
 
 const constructorMethod = async (app) => {
   app.use("/", searchRouter);
@@ -10,6 +11,7 @@ const constructorMethod = async (app) => {
   app.use("/admin", adminRouter);
   app.use("/universities", universitiesRouter);
   app.use("/courses", coursesRouter);
+  app.use("/reviews", reviewsRouter);
   app.use("*", (req, res) => {
     res.render("error", { status: 404, message: "Page not found" });
   });

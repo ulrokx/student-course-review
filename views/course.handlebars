@@ -1,5 +1,28 @@
-<main>
-  <h1>{{ course.courseName }}</h1>
-  <h2>{{ course.courseCode }}</h2>
-  <p>{{ course.professors }}</p>
+<script src="/public/js/course.js" defer></script>
+
+<main class="container">
+  <div class="row justify-content-between">
+    <div class="col">
+      <h1>{{ course.courseName }}</h1>
+      <h2>{{ course.courseCode }}</h2>
+      <p>{{ course.professors }}</p>
+    </div>
+    <div class="col">
+      <h2 class="float-end">Average Rating: {{ course.averageRating }}</h2>
+    </div>
+  </div>
+  <hr />
+  <div class="container vstack gap-2">
+    {{#each reviews as |review|}}
+    <div class="card review" data-_id="{{ review._id }}">
+      <div class="card-body d-flex flex-row justify-content-start">
+        {{> vote review }}
+        <div class="w-100">
+          <h5 class="card-title">{{ review.rating }}</h5>
+          <p class="card-text">{{ review.content }}</p>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
 </main>

@@ -22,3 +22,4 @@ const getCollectionFn = (collection) => {
 export const users = getCollectionFn("users");
 export const universities = getCollectionFn("universities");
 export const courses = getCollectionFn("courses");
+export const reviews = getCollectionFn("reviews");

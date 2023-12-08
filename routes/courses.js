@@ -2,6 +2,7 @@ import { Router } from "express";
 import { getAllCourses, getCourse, getCourses } from "../data/courses.js";
 import { searchCourse } from "../data/search.js";
 import { idSchema, searchCourseSchema } from "../data/validation.js";
+import { getReviews, includesObjectId } from "../data/reviews.js";
 
 const router = Router();
 
@@ -11,6 +12,22 @@ const formatCourse = (course) => ({
 });
 
 const formatCourses = (courses) => courses.map(formatCourse);
+
+const getCurrentVote = (review, userId) => {
+  if (includesObjectId(review.upvotes, userId)) {
+    return "upvote";
+  }
+  if (includesObjectId(review.downvotes, userId)) {
+    return "downvote";
+  }
+  return "novote";
+};
+
+const addCurrentVotes = (reviews, userId) =>
+  reviews.map((review) => ({
+    ...review,
+    currentVote: getCurrentVote(review, userId),
+  }));
 
 router
   .get("/", async (req, res) => {
@@ -45,7 +62,13 @@ router
     }
     try {
       const course = await getCourse(id);
-      res.render("course", { course: formatCourse(course) });
+      const reviews = await getReviews(id);
+      res.render("course", {
+        course: formatCourse(course),
+        reviews: req.session.user
+          ? addCurrentVotes(reviews, req.session.user._id)
+          : reviews,
+      });
     } catch (e) {
       res.status(e.status).render("error", e);
     }

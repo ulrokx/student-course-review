@@ -17,6 +17,7 @@ router
   })
   .post("/login", async (req, res) => {
     const { body } = req;
+    const { redirect } = req.query;
     const parseResults = loginSchema.safeParse(body);
     if (!parseResults.success) {
       return res
@@ -26,7 +27,7 @@ router
     try {
       const user = await login(parseResults.data);
       req.session.user = user;
-      return res.redirect("/");
+      return res.redirect(redirect ?? "/");
     } catch (e) {
       return res.status(e.status).send(e);
     }
