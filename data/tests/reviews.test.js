@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { reviews, courses } from "../../config/mongoCollections.js";
+import { reviews, courses, users } from "../../config/mongoCollections.js";
 import { createReview, getReviews, updateVote } from "../reviews.js";
 
 jest.mock("../../config/mongoCollections.js");
@@ -19,6 +19,9 @@ describe("data/reviews", () => {
         reviewCount: 1,
       });
       const coursesUpdateOne = jest.fn();
+      const usersFindOne = jest.fn().mockResolvedValue({
+        username: "testusername",
+      });
       reviews.mockResolvedValue({
         findOne: reviewsFindOne,
         insertOne: reviewsInsertOne,
@@ -26,6 +29,9 @@ describe("data/reviews", () => {
       courses.mockResolvedValue({
         findOne: coursesFindOne,
         updateOne: coursesUpdateOne,
+      });
+      users.mockResolvedValue({
+        findOne: usersFindOne,
       });
       const result = await createReview(
         userId.toString(),

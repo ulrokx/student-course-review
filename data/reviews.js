@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { courses, reviews } from "../config/mongoCollections.js";
+import { courses, reviews, users } from "../config/mongoCollections.js";
 import {
   createReviewSchema,
   idSchema,
@@ -56,6 +56,9 @@ export const createReview = async (userId, courseId, params) => {
     );
   }
 
+  const usersCollection = await users();
+  const user = await usersCollection.findOne({ _id: userId });
+
   const insertedReview = await reviewsCollection.insertOne({
     ...paramsParseResults.data,
     userId,
@@ -63,6 +66,7 @@ export const createReview = async (userId, courseId, params) => {
     upvotes: [],
     downvotes: [],
     score: 0,
+    username: user.username,
   });
 
   if (!insertedReview.acknowledged) {
@@ -127,7 +131,7 @@ export const updateReview = async (userId, courseId, params) => {
 
   const updatedReview = await reviewsCollection.updateOne(
     { userId, courseId },
-    { $set: paramsParseResults.data },
+    { $set: { ...paramsParseResults.data, updatedAt: new Date() } },
   );
 
   if (!updatedReview.acknowledged) {

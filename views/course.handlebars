@@ -53,14 +53,24 @@
       <div class="card-body d-flex flex-row justify-content-start">
         {{> vote review }}
         <div class="w-100">
-          <input
-            name="rating"
-            class="review-rating rating mb-2"
-            data-min="0"
-            data-max="5"
-            data-step="0.5"
-            value="{{ review.rating }}"
-          />
+          <div class="row">
+            <div class="col">
+              <input
+                name="rating"
+                class="review-rating rating mb-2"
+                data-min="0"
+                data-max="5"
+                data-step="0.5"
+                value="{{ review.rating }}"
+              />
+            </div>
+            <div class="col">
+              <p class="text-end">
+                {{ review.username }} · created {{ review.createdAt }}
+                {{#if review.updatedAt}} · updated {{ review.updatedAt }}{{/if}}
+              </p>
+            </div>
+          </div>
           <p class="card-text">{{ review.content }}</p>
         </div>
       </div>

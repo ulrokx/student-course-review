@@ -3,6 +3,7 @@ import { getAllCourses, getCourse, getCourses } from "../data/courses.js";
 import { searchCourse } from "../data/search.js";
 import { idSchema, searchCourseSchema } from "../data/validation.js";
 import { getReviews, includesObjectId } from "../data/reviews.js";
+import { formatDistance } from "date-fns";
 
 const router = Router();
 
@@ -34,6 +35,22 @@ const getUserReview = (reviews, userId) =>
 
 const removeUserReview = (reviews, userId) =>
   reviews.filter((review) => review.userId.toString() !== userId.toString());
+
+const formatReview = (review) => ({
+  ...review,
+  createdAt: formatDistance(review._id.getTimestamp(), new Date(), {
+    includeSeconds: true,
+    addSuffix: true,
+  }),
+  updatedAt:
+    review.updatedAt &&
+    formatDistance(review.updatedAt, new Date(), {
+      includeSeconds: true,
+      addSuffix: true,
+    }),
+});
+
+const formatReviews = (reviews) => reviews.map(formatReview);
 
 router
   .get("/", async (req, res) => {
@@ -77,13 +94,13 @@ router
         }
         return res.render("course", {
           course: formatCourse(course),
-          reviews: addCurrentVotes(reviews, userId),
+          reviews: formatReviews(addCurrentVotes(reviews, userId)),
           review,
         });
       } else {
         return res.render("course", {
           course: formatCourse(course),
-          reviews: reviews,
+          reviews: formatReviews(reviews),
         });
       }
     } catch (e) {
