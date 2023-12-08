@@ -35,6 +35,10 @@ export const useVote = (_id) => {
   updateSelected(currentVote);
 
   const handleButtonClick = (vote) => async (e) => {
+    if (!currentVote) {
+      window.location.href = `/auth/login?redirect=${window.location.pathname}`;
+      return;
+    }
     updateSelected(vote);
     score = parseInt(scoreText.text());
     if (vote === "upvote") {
