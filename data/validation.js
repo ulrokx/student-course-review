@@ -8,7 +8,7 @@ export const idSchema = z
     message: "Invalid id",
   });
 
-const usernameRegExp = new RegExp(/^[a-zA-Z0-9_]{3,16}$/);
+const usernameRegExp = new RegExp(/^[a-zA-Z0-9_.\-]{3,16}$/);
 
 const emailSchema = z.string().trim().email();
 
@@ -18,7 +18,7 @@ const passwordSchema = z
 
 const usernameSchema = z.string().trim().regex(usernameRegExp, {
   message:
-    "Username must be between 3 and 16 characters long and can only contain letters, numbers, and underscores",
+    "Username must be between 3 and 16 characters long and can only contain letters, numbers, underscores, hyphens, and periods",
 });
 
 export const registerSchema = z.object({
