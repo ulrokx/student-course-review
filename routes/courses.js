@@ -29,6 +29,12 @@ const addCurrentVotes = (reviews, userId) =>
     currentVote: getCurrentVote(review, userId),
   }));
 
+const getUserReview = (reviews, userId) =>
+  reviews.find((review) => review.userId.toString() === userId.toString());
+
+const removeUserReview = (reviews, userId) =>
+  reviews.filter((review) => review.userId.toString() !== userId.toString());
+
 router
   .get("/", async (req, res) => {
     const { search } = req.query;
@@ -62,15 +68,26 @@ router
     }
     try {
       const course = await getCourse(id);
-      const reviews = await getReviews(id);
-      res.render("course", {
-        course: formatCourse(course),
-        reviews: req.session.user
-          ? addCurrentVotes(reviews, req.session.user._id)
-          : reviews,
-      });
+      let reviews = await getReviews(id);
+      if (req.session.user) {
+        const userId = req.session.user._id;
+        let review = null;
+        if ((review = getUserReview(reviews, userId))) {
+          reviews = removeUserReview(reviews, userId);
+        }
+        return res.render("course", {
+          course: formatCourse(course),
+          reviews: addCurrentVotes(reviews, userId),
+          review,
+        });
+      } else {
+        return res.render("course", {
+          course: formatCourse(course),
+          reviews: reviews,
+        });
+      }
     } catch (e) {
-      res.status(e.status).render("error", e);
+      return res.status(e.status).render("error", e);
     }
   });
 

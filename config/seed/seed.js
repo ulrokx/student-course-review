@@ -1,5 +1,5 @@
 import { courses, reviews, universities, users } from "../mongoCollections.js";
-import getDb from "../mongoConnection.js";
+import { createReview } from "../../data/reviews.js";
 import bcrypt from "bcrypt";
 
 const usersCollection = await users();
@@ -61,17 +61,11 @@ const { insertedId: courseId } = await coursesCollection.insertOne({
   courseName: "Computer Architecture",
   professors: ["Shudong Hao"],
   universityId,
-  averageRating: 10,
 });
 
-await reviewsCollection.insertOne({
-  courseId,
-  userId,
-  rating: 10,
+await createReview(userId.toString(), courseId.toString(), {
+  rating: 5,
   content: "Great course!",
-  upvotes: [],
-  downvotes: [],
-  score: 0,
 });
 
 console.info("✅ Seeding complete");

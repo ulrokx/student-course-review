@@ -1,22 +1,26 @@
 import { ObjectId } from "mongodb";
-import { reviews } from "../config/mongoCollections.js";
+import { courses, reviews } from "../config/mongoCollections.js";
 import {
   createReviewSchema,
   idSchema,
   updateVoteSchema,
 } from "./validation.js";
 
-export const createReview = async (userId, params) => {
+export const createReview = async (userId, courseId, params) => {
   const paramsParseResults = createReviewSchema.safeParse(params);
-  const idParseResults = idSchema.safeParse(userId);
+  const userIdParseResults = idSchema.safeParse(userId);
+  const courseIdParseResults = idSchema.safeParse(userId);
   if (!paramsParseResults.success) {
     throw { status: 400, message: paramsParseResults.error.issues[0].message };
   }
-  if (!idParseResults.success) {
+  if (!userIdParseResults.success) {
+    throw { status: 400, message: "Invalid id" };
+  }
+  if (!courseIdParseResults.success) {
     throw { status: 400, message: "Invalid id" };
   }
   const reviewsCollection = await reviews();
-  const courseId = new ObjectId(paramsParseResults.data.courseId);
+  courseId = new ObjectId(courseId);
   userId = new ObjectId(userId);
   const existingReview = await reviewsCollection.findOne({
     userId,
@@ -25,6 +29,33 @@ export const createReview = async (userId, params) => {
   if (existingReview) {
     throw { status: 400, message: "Cannot write multiple reviews" };
   }
+  const coursesCollection = await courses();
+  const course = await coursesCollection.findOne({ _id: courseId });
+  if (!course) {
+    throw { status: 404, message: "Course not found" };
+  }
+  if (!course.averageRating) {
+    await coursesCollection.updateOne(
+      { _id: courseId },
+      {
+        $set: { averageRating: paramsParseResults.data.rating, reviewCount: 1 },
+      },
+    );
+  } else {
+    await coursesCollection.updateOne(
+      { _id: courseId },
+      {
+        $set: {
+          averageRating:
+            (course.averageRating * course.reviewCount +
+              paramsParseResults.data.rating) /
+            (course.reviewCount + 1),
+        },
+        $inc: { reviewCount: 1 },
+      },
+    );
+  }
+
   const insertedReview = await reviewsCollection.insertOne({
     ...paramsParseResults.data,
     userId,
@@ -33,9 +64,11 @@ export const createReview = async (userId, params) => {
     downvotes: [],
     score: 0,
   });
+
   if (!insertedReview.acknowledged) {
     throw { status: 500, message: "Could not add review" };
   }
+
   return {
     _id: insertedReview.insertedId,
     ...paramsParseResults.data,
@@ -44,6 +77,66 @@ export const createReview = async (userId, params) => {
     upvotes: [],
     downvotes: [],
     score: 0,
+  };
+};
+
+export const updateReview = async (userId, courseId, params) => {
+  const paramsParseResults = createReviewSchema.safeParse(params);
+  const userIdParseResults = idSchema.safeParse(userId);
+  const courseIdParseResults = idSchema.safeParse(userId);
+  if (!paramsParseResults.success) {
+    throw { status: 400, message: paramsParseResults.error.issues[0].message };
+  }
+  if (!userIdParseResults.success) {
+    throw { status: 400, message: "Invalid id" };
+  }
+  if (!courseIdParseResults.success) {
+    throw { status: 400, message: "Invalid id" };
+  }
+  const reviewsCollection = await reviews();
+  courseId = new ObjectId(courseId);
+  userId = new ObjectId(userId);
+  const existingReview = await reviewsCollection.findOne({
+    userId,
+    courseId,
+  });
+  if (!existingReview) {
+    throw { status: 404, message: "Review not found" };
+  }
+  const coursesCollection = await courses();
+  const course = await coursesCollection.findOne({ _id: courseId });
+  if (!course) {
+    throw { status: 404, message: "Course not found" };
+  }
+  const oldRating = existingReview.rating;
+  const newRating = paramsParseResults.data.rating;
+  if (oldRating !== newRating) {
+    await coursesCollection.updateOne(
+      { _id: courseId },
+      {
+        $set: {
+          averageRating:
+            (course.averageRating * course.reviewCount -
+              oldRating +
+              newRating) /
+            course.reviewCount,
+        },
+      },
+    );
+  }
+
+  const updatedReview = await reviewsCollection.updateOne(
+    { userId, courseId },
+    { $set: paramsParseResults.data },
+  );
+
+  if (!updatedReview.acknowledged) {
+    throw { status: 500, message: "Could not update review" };
+  }
+
+  return {
+    ...existingReview,
+    ...paramsParseResults.data,
   };
 };
 

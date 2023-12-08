@@ -12,6 +12,41 @@
     </div>
   </div>
   <hr />
+  {{#if isLoggedIn}}
+  <form id="review-form" action="/reviews" class="w-100" method="POST">
+    {{#if review}}
+    <input type="hidden" name="_method" value="PATCH" />
+    {{/if}}
+    <div class="mb-2">
+      <label for="rating-input" class="form-label">Course Rating</label>
+      <input
+        id="rating-input"
+        name="rating"
+        class="rating"
+        data-min="0"
+        data-max="5"
+        data-step="0.5"
+        value="{{ review.rating }}"
+      />
+    </div>
+    <div class="mb-2">
+      <label for="content-input">Review Content</label>
+      <textarea
+        class="form-control"
+        id="content-input"
+        name="content"
+        rows="10"
+        >{{ review.content }}</textarea
+      >
+    </div>
+    <input
+      type="submit"
+      value="{{#if review}}Edit Review {{else}}Submit Review{{/if}}"
+      class="btn btn-primary"
+    />
+  </form>
+  <hr />
+  {{/if}}
   <div class="container vstack gap-2">
     {{#each reviews as |review|}}
     <div class="card review" data-_id="{{ review._id }}">

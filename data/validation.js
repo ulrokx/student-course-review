@@ -68,14 +68,22 @@ export const createCourseSchema = z.object({
 
 export const updateCourseSchema = createCourseSchema.partial();
 
-const reviewRatingSchema = z.number().int().min(1).max(10);
+const reviewRatingSchema = z.preprocess(
+  (val) => parseFloat(val),
+  z
+    .number()
+    .min(0.5)
+    .max(5)
+    .refine((val) => val % 0.5 === 0, {
+      message: "Rating must be a multiple of .5",
+    }),
+);
 
 const reviewContentSchema = z.string().min(10).max(500);
 
 export const createReviewSchema = z.object({
   rating: reviewRatingSchema,
   content: reviewContentSchema,
-  courseId: idSchema,
 });
 
 const voteSchema = z.enum(["upvote", "downvote", "novote"]);

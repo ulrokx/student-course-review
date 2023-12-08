@@ -1,7 +1,6 @@
 import $ from "jquery";
 
 export const useVote = (_id) => {
-  debugger;
   const container = $(`#${_id}-vote`);
   let currentVote = container.data("currentvote");
   let score = container.data("score");
