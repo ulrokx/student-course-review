@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { reviews } from "../../config/mongoCollections.js";
+import { reviews, courses } from "../../config/mongoCollections.js";
 import { createReview, getReviews, updateVote } from "../reviews.js";
 
 jest.mock("../../config/mongoCollections.js");
@@ -13,20 +13,40 @@ describe("data/reviews", () => {
       const reviewsInsertOne = jest.fn(() => {
         return { acknowledged: true, insertedId: new ObjectId() };
       });
+      const coursesFindOne = jest.fn().mockResolvedValue({
+        _id: courseId,
+        averageRating: 1,
+        reviewCount: 1,
+      });
+      const coursesUpdateOne = jest.fn();
       reviews.mockResolvedValue({
         findOne: reviewsFindOne,
         insertOne: reviewsInsertOne,
       });
-      const result = await createReview(userId.toString(), {
-        courseId: courseId.toString(),
-        rating: 9,
-        content: "Course is fantastic! Great professors as well.",
+      courses.mockResolvedValue({
+        findOne: coursesFindOne,
+        updateOne: coursesUpdateOne,
       });
+      const result = await createReview(
+        userId.toString(),
+        courseId.toString(),
+        {
+          rating: 4,
+          content: "Course is fantastic! Great professors as well.",
+        },
+      );
       expect(result).toHaveProperty("_id");
       expect(result).toHaveProperty("courseId", courseId);
       expect(result).toHaveProperty("userId", userId);
-      expect(result).toHaveProperty("rating", 9);
+      expect(result).toHaveProperty("rating", 4);
       expect(result).toHaveProperty("score", 0);
+      expect(coursesUpdateOne).toHaveBeenCalledWith(
+        { _id: courseId },
+        {
+          $set: { averageRating: 2.5 },
+          $inc: { reviewCount: 1 },
+        },
+      );
     });
 
     it("should throw an error if user already wrote a review", async () => {
@@ -35,13 +55,20 @@ describe("data/reviews", () => {
       const reviewsFindOne = jest.fn().mockResolvedValue({
         _id: new ObjectId(),
       });
+      const coursesFindOne = jest.fn().mockResolvedValue({
+        _id: courseId,
+        averageRating: 1,
+        reviewCount: 1,
+      });
       reviews.mockResolvedValue({
         findOne: reviewsFindOne,
       });
+      courses.mockResolvedValue({
+        findOne: coursesFindOne,
+      });
       expect(() =>
-        createReview(userId.toString(), {
-          courseId: courseId.toString(),
-          rating: 9,
+        createReview(userId.toString(), courseId.toString(), {
+          rating: 5,
           content: "Course is fantastic! Great professors as well.",
         }),
       ).rejects.toHaveProperty("status", 400);
@@ -54,14 +81,23 @@ describe("data/reviews", () => {
       const reviewsInsertOne = jest.fn(() => {
         return { acknowledged: false };
       });
+      const coursesUpdateOne = jest.fn();
+      const coursesFindOne = jest.fn().mockResolvedValue({
+        _id: courseId,
+        averageRating: 1,
+        reviewCount: 1,
+      });
       reviews.mockResolvedValue({
         findOne: reviewsFindOne,
         insertOne: reviewsInsertOne,
       });
+      courses.mockResolvedValue({
+        findOne: coursesFindOne,
+        updateOne: coursesUpdateOne,
+      });
       expect(() =>
-        createReview(userId.toString(), {
-          courseId: courseId.toString(),
-          rating: 9,
+        createReview(userId.toString(), courseId.toString(), {
+          rating: 3,
           content: "Course is fantastic! Great professors as well.",
         }),
       ).rejects.toHaveProperty("status", 500);
