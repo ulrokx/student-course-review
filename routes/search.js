@@ -36,7 +36,7 @@ router.route("/search-universities").get(async (req, res) => {
     console.error(e);
     res
       .status(404)
-      .render("error", { errorMessage2: "Unable to gather character data" });
+      .render("error", { errorMessage2: "Unable to gather university data" });
   }
 });
 
