@@ -9,6 +9,8 @@ import "bootstrap-star-rating";
     .get();
   reviewIds.forEach((_id) => useVote(_id));
 
+  $(".review-rating").rating({ displayOnly: true });
+
   const reviewRating = $("#rating-input");
   reviewRating.rating({ showClear: false });
   const reviewContent = $("#content-input");
