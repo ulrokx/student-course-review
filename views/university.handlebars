@@ -10,6 +10,7 @@
     <h2>Courses:</h2>
     <ul>
       {{#each courses as |course|}}
+      <<<<<<< HEAD
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">{{ course.courseName }}</h5>
@@ -23,6 +24,21 @@
         </div>
       </div>
       {{/each}}
+      =======
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ course.courseName }}</h5>
+          <p class="card-subtitle">{{ course.courseCode }}</p>
+          <p class="card-text">{{ course.professors }}</p>
+          <a
+            class="btn btn-primary stretched-link"
+            href="/courses/{{ course._id }}"
+            >View Course</a
+          >
+        </div>
+      </div>
+      {{/each}}
+      >>>>>>> b8c7d9b (Fixed Error rendering)
     </ul>
   </body>
   <a href="/">Search for Another University</a>
