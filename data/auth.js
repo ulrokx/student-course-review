@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { users } from "../config/mongoCollections.js";
+import { universities, users } from "../config/mongoCollections.js";
 import { loginSchema, registerSchema, idSchema } from "./validation.js";
 import { ObjectId } from "bson";
 
@@ -12,11 +12,21 @@ export const register = async (params) => {
   if (!parseResults.success) {
     throw { status: 400, message: parseResults.error.message };
   }
-  const { email, password, username } = parseResults.data;
+  const { email, password, username, universityId } = parseResults.data;
   const usersCollection = await users();
   const existingUser = await usersCollection.findOne({ email });
   if (existingUser) {
     throw { status: 400, message: "Email already in use" };
+  }
+  let university = null;
+  if (universityId) {
+    const universitiesCollection = await universities();
+    university = await universitiesCollection.findOne({
+      _id: new ObjectId(universityId),
+    });
+    if (!university) {
+      throw { status: 404, message: "University not found" };
+    }
   }
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = {
@@ -25,6 +35,10 @@ export const register = async (params) => {
     username,
     admin: false,
   };
+  if (universityId) {
+    newUser.universityId = new ObjectId(universityId);
+    newUser.universityName = university.name;
+  }
   const insertedUser = await usersCollection.insertOne(newUser);
   if (!insertedUser.acknowledged) {
     throw { status: 500, message: "Could not add user" };

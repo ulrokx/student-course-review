@@ -25,6 +25,7 @@ export const registerSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
   username: usernameSchema,
+  universityId: idSchema.or(z.undefined()),
 });
 
 export const loginSchema = z.object({
@@ -50,9 +51,9 @@ export const createUniversitySchema = z.object({
 
 export const updateUniversitySchema = createUniversitySchema.partial();
 
-export const searchUniversitySchema = z.string().trim().min(3);
+export const searchUniversitySchema = z.string().trim().min(1);
 
-export const searchCourseSchema = z.string().trim().min(2);
+export const searchCourseSchema = z.string().trim().min(1);
 
 const courseCodeSchema = z.string().min(3).max(10);
 

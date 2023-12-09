@@ -29,7 +29,7 @@ const getRandomIntInclusive = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-const generateUsers = () => {
+const generateUsers = (universityIds) => {
   return Promise.all(
     [...Array(numberOfUsers)].map(async () => {
       const password = faker.internet.password();
@@ -37,6 +37,8 @@ const generateUsers = () => {
         email: faker.internet.email(),
         password,
         username: faker.internet.displayName().slice(0, 16),
+        universityId:
+          universityIds[getRandomIntInclusive(0, universityIds.length - 1)],
       });
       return { ...user, password };
     }),
@@ -92,10 +94,10 @@ const generateVote = (userId, reviewId) => {
 
 // await wipeDatabase();
 console.info("🖨️ Begin populating database");
-console.info("👤 Generating users...");
-const users = await generateUsers();
 console.info("🏫 Generating universities...");
 const universities = await generateUniversities();
+console.info("👤 Generating users...");
+const users = await generateUsers(universities.map((u) => u._id.toString()));
 
 console.info("📚 Generating courses...");
 // each university should have courses

@@ -14,6 +14,13 @@
       name="confirm-password-input"
       id="confirm-password-input"
     />
+    <label for="univesity-input">University</label>
+    <select name="universityId" id="university-input">
+      {{#each universities as |university|}}
+      <option value="{{ university._id }}">{{ university.name }}</option>
+      {{/each}}
+      <option>Other</option>
+    </select>
     <button>Log In</button>
     <p id="register-form-error"></p>
   </form>

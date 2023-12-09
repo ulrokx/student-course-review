@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { courses, universities } from "../config/mongoCollections.js";
 
 export const searchUniversity = async (search) => {
@@ -8,9 +9,25 @@ export const searchUniversity = async (search) => {
     .toArray();
 };
 
-export const searchCourse = async (search) => {
+export const searchCourse = async (search, universityId) => {
   const courseCollection = await courses();
   const $regex = new RegExp(search, "i");
+  if (universityId) {
+    return courseCollection
+      .find({
+        $and: [
+          {
+            $or: [
+              { courseName: { $regex } },
+              { courseCode: { $regex } },
+              { professors: { $regex } },
+            ],
+          },
+          { universityId: new ObjectId(universityId) },
+        ],
+      })
+      .toArray();
+  }
   return courseCollection
     .find({
       $or: [

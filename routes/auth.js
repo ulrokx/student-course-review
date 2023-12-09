@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { loginSchema, registerSchema } from "../data/validation.js";
 import { login, register } from "../data/auth.js";
+import { getUniversities } from "../data/universities.js";
 
 const router = Router();
 
@@ -33,7 +34,8 @@ router
     }
   })
   .get("/register", async (req, res) => {
-    res.render("register");
+    const universities = await getUniversities();
+    res.render("register", { universities });
   })
   .post("/register", async (req, res) => {
     const { body } = req;

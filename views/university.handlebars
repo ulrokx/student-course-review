@@ -1,29 +1,49 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>University Details</title>
-  </head>
-  <body>
-    <h1>{{ university.name }}</h1>
-    <h2>{{ university.location }}</h2>
-    <h2>Courses:</h2>
-    <ul>
-      {{#each courses as |course|}}
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">{{ course.courseName }}</h5>
-          <p class="card-subtitle">{{ course.courseCode }}</p>
-          <p class="card-text">{{ course.professors }}</p>
-          <a
-            class="btn btn-primary stretched-link"
-            href="/courses/{{ course._id }}"
-            >View Course</a
-          >
-        </div>
+<script src="/public/js/university.js" defer></script>
+
+<main class="container">
+  <h1>{{ university.name }}</h1>
+  <h2>{{ university.location }}</h2>
+  <hr />
+  <h3>Courses:</h3>
+  <form method="GET" id="search-form">
+    <label for="search-input" class="form-label"
+      >Search by name, code, or professor name</label
+    >
+    <input
+      type="text"
+      id="search-input"
+      name="search"
+      class="form-control"
+      value="{{ search }}"
+    />
+  </form>
+  {{#if search}}
+  <h4>Search results for "{{ search }}"</h4>
+  {{/if}}
+  {{#if courses}}
+
+  <ul class="container vstack gap-2">
+    {{#each courses as |course|}}
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ course.courseName }}</h5>
+        <p class="card-subtitle">{{ course.courseCode }}</p>
+        <p class="card-text">{{ course.professors }}</p>
+        <a
+          class="btn btn-primary stretched-link"
+          href="/courses/{{ course._id }}"
+          >View Course</a
+        >
       </div>
-      {{/each}}
-    </ul>
-  </body>
-  <a href="/">Search for Another University</a>
-</html>
+    </div>
+    {{/each}}
+  </ul>
+  {{else}}
+  <p>Your search - {{ search }} - did not match any courses.</p>
+  <p>Suggestions:</p>
+  <ul>
+    <li>Try using the course code or a professors name</li>
+    <li>Try different keywords</li>
+  </ul>
+  {{/if}}
+</main>
