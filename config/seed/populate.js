@@ -29,53 +29,55 @@ const getRandomIntInclusive = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-const generateUsers = (universityIds) => {
-  return Promise.all(
-    [...Array(numberOfUsers)].map(async () => {
-      const password = faker.internet.password();
-      const user = await register({
-        email: faker.internet.email(),
-        password,
-        username: faker.internet.displayName().slice(0, 16),
-        universityId:
-          universityIds[getRandomIntInclusive(0, universityIds.length - 1)],
-      });
-      return { ...user, password };
-    }),
-  );
+const generateUsers = async (universityIds) => {
+  const users = [];
+  for (let i = 0; i < numberOfUsers; i++) {
+    const password = faker.internet.password();
+    const user = await register({
+      email: faker.internet.email(),
+      password,
+      username: faker.internet.displayName().slice(0, 16),
+      universityId:
+        universityIds[getRandomIntInclusive(0, universityIds.length - 1)],
+    });
+    users.push({ ...user, password });
+  }
+  return users;
 };
 
-const generateUniversities = () => {
-  return Promise.all(
-    [...Array(numberOfUniversities)].map(async () => {
-      return createUniversity({
-        name: `${faker.company.name()} University`,
-        location: `${faker.location.city()}, ${faker.location.state({
-          abbreviated: true,
-        })}`,
-      });
-    }),
-  );
+const generateUniversities = async () => {
+  const universities = [];
+  for (let i = 0; i < numberOfUniversities; i++) {
+    const university = await createUniversity({
+      name: `${faker.company.name()} University`,
+      location: `${faker.location.city()}, ${faker.location.state({
+        abbreviated: true,
+      })}`,
+    });
+    universities.push(university);
+  }
+  return universities;
 };
 
-const generateCourses = (universityId) => {
-  return Promise.all(
-    [...Array(numberOfCoursesPerUniversity)].map(async () => {
-      return createCourse(universityId, {
-        courseCode: `${faker.string.alpha({
-          casing: "upper",
-          length: { min: 2, max: 3 },
-        })} ${faker.string.numeric({
-          allowLeadingZeros: false,
-          length: { min: 3, max: 5 },
-        })}`,
-        courseName: faker.lorem.words({ min: 3, max: 5 }).slice(0, 40),
-        professors: Array.from({ length: getRandomIntInclusive(1, 3) }).map(
-          () => faker.person.fullName(),
-        ),
-      });
-    }),
-  );
+const generateCourses = async (universityId) => {
+  const courses = [];
+  for (let i = 0; i < numberOfCoursesPerUniversity; i++) {
+    const course = await createCourse(universityId, {
+      courseCode: `${faker.string.alpha({
+        casing: "upper",
+        length: { min: 2, max: 3 },
+      })} ${faker.string.numeric({
+        allowLeadingZeros: false,
+        length: { min: 3, max: 5 },
+      })}`,
+      courseName: faker.lorem.words({ min: 3, max: 5 }).slice(0, 40),
+      professors: Array.from({ length: getRandomIntInclusive(1, 3) }).map(() =>
+        faker.person.fullName(),
+      ),
+    });
+    courses.push(course);
+  }
+  return courses;
 };
 
 const generateReview = (userId, courseId) => {
@@ -101,43 +103,31 @@ const users = await generateUsers(universities.map((u) => u._id.toString()));
 
 console.info("📚 Generating courses...");
 // each university should have courses
-const courses = (
-  await Promise.all(
-    universities.map((university) =>
-      generateCourses(university._id.toString()),
-    ),
-  )
-).flat();
+let courses = [];
+for (const university of universities) {
+  courses.push(...(await generateCourses(university._id.toString())));
+}
 
 console.info("📝 Generating reviews...");
 // each course should have between 0 and 10 reviews
-const reviews = (
-  await Promise.all(
-    courses.map((course) => {
-      const numberOfReviews = getRandomIntInclusive(0, 10);
-      const usersToReview = shuffleArray(users).slice(0, numberOfReviews);
-      return Promise.all(
-        usersToReview.map((user) =>
-          generateReview(user._id.toString(), course._id.toString()),
-        ),
-      );
-    }),
-  )
-).flat();
-
+const reviews = [];
+for (const course of courses) {
+  const numberOfReviews = getRandomIntInclusive(0, 10);
+  const usersToReview = shuffleArray(users).slice(0, numberOfReviews);
+  for (const user of usersToReview) {
+    reviews.push(
+      await generateReview(user._id.toString(), course._id.toString()),
+    );
+  }
+}
 console.info("👍 Generating votes...");
 // each user should vote on 5 random reviews
-await Promise.all(
-  users.map((user) => {
-    const reviewsToVote = shuffleArray(reviews).slice(0, 5);
-    return Promise.all(
-      reviewsToVote.map((review) =>
-        generateVote(user._id.toString(), review._id.toString()),
-      ),
-    );
-  }),
-);
-
+for (const user of users) {
+  const reviewsToVote = shuffleArray(reviews).slice(0, 5);
+  for (const review of reviewsToVote) {
+    await generateVote(user._id.toString(), review._id.toString());
+  }
+}
 console.info("✅ Populating complete");
 
 process.exit(0);
