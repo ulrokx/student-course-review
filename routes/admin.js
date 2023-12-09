@@ -41,7 +41,9 @@ router
       const courses = await getCourses(id);
       return res.render("edit-university", { university, courses });
     } catch (e) {
-      return res.status(e.status).send(e);
+      return res
+        .status(e.status)
+        .render("error", { status: e.status, message: e });
     }
   })
   .post("/universities", async (req, res) => {
@@ -50,7 +52,9 @@ router
       const university = await createUniversity({ name, location });
       return res.status(200).json(university);
     } catch (e) {
-      return res.status(e.status).send(e);
+      return res
+        .status(e.status)
+        .render("error", { status: e.status, message: e });
     }
   })
   .patch("/universities/:id", async (req, res) => {
@@ -61,7 +65,9 @@ router
       return res.status(200).json(university);
     } catch (e) {
       console.error(e);
-      return res.status(e.status).send(e);
+      return res
+        .status(e.status)
+        .render("error", { status: e.status, message: e });
     }
   })
   .delete("/universities/:id", async (req, res) => {
@@ -70,7 +76,9 @@ router
       await deleteUniversity(id);
       return res.status(200).json({ message: "University deleted" });
     } catch (e) {
-      return res.status(e.status).send(e);
+      return res
+        .status(e.status)
+        .render("error", { status: e.status, message: e });
     }
   })
   .get("/courses/:id", async (req, res) => {
@@ -86,43 +94,57 @@ router
     const { id } = req.params;
     const parseResults = updateCourseSchema.safeParse(req.body);
     if (!parseResults.success) {
-      return res.status(400).json(parseResults.error);
+      return res
+        .status(400)
+        .render("error", { status: 400, message: parseResults.error });
     }
     try {
       const course = await updateCourse(id, req.body);
       return res.status(200).json(course);
     } catch (e) {
-      return res.status(e.status).send(e);
+      return res
+        .status(e.status)
+        .render("error", { status: e.status, message: e });
     }
   })
   .delete("/courses/:id", async (req, res) => {
     const { id } = req.params;
     const parseResults = idSchema.safeParse(id);
     if (!parseResults.success) {
-      return res.status(400).json(parseResults.error);
+      return res
+        .status(400)
+        .render("error", { status: 400, message: parseResults.error });
     }
     try {
       await deleteCourse(id);
       return res.status(200).json({ message: "Course deleted" });
     } catch (e) {
-      return res.status(e.status).send(e);
+      return res
+        .status(e.status)
+        .render("error", { status: e.status, message: e });
     }
   })
   .post("/universities/:id", async (req, res) => {
     const { id } = req.params;
     let parseResults = createCourseSchema.safeParse(req.body);
     if (!parseResults.success) {
-      return res.status(400).json(parseResults.error);
+      return res
+        .status(400)
+        .render("error", { status: 400, message: parseResults.error });
     }
     parseResults = idSchema.safeParse(id);
     if (!parseResults.success) {
-      return res.status(400).json(parseResults.error);
+      return res
+        .status(400)
+        .render("error", { status: 400, message: parseResults.error });
     }
     try {
       const course = await createCourse(id, req.body);
       return res.status(200).json(course);
     } catch (e) {
-      return res.status(e.status).send(e);
+      return res
+        .status(e.status)
+        .render("error", { status: e.status, message: e });
     }
   });
 
