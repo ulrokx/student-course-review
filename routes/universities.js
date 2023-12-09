@@ -6,7 +6,7 @@ import {
   searchCourseSchema,
   searchUniversitySchema,
 } from "../data/validation.js";
-import { searchCourse, searchUniversity } from "../data/search.js";
+import { searchUniversity } from "../data/search.js";
 
 const router = Router();
 
@@ -58,7 +58,7 @@ router
           message: parseResults.error.issues[0].message,
         });
       }
-      courses = await searchCourse(parseResults.data, id);
+      courses = await getCourses({ search, universityId: id });
     } else {
       courses = await getCourses(id);
     }

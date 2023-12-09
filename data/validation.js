@@ -55,6 +55,14 @@ export const searchUniversitySchema = z.string().trim().min(1);
 
 export const searchCourseSchema = z.string().trim().min(1);
 
+export const sortByCourseSchema = z.enum(["rating-asc", "rating-desc"]);
+
+export const getCoursesOptionsSchema = z.object({
+  sortBy: sortByCourseSchema.or(z.undefined()).or(z.literal("")),
+  universityId: idSchema.or(z.undefined()),
+  search: searchCourseSchema.or(z.undefined()).or(z.literal("")),
+});
+
 const courseCodeSchema = z.string().min(3).max(10);
 
 const courseNameSchema = z.string().min(3).max(40);

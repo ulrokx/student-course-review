@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { getAllCourses, getCourse, getCourses } from "../data/courses.js";
-import { searchCourse } from "../data/search.js";
-import { idSchema, searchCourseSchema } from "../data/validation.js";
+import { idSchema } from "../data/validation.js";
 import { getReviews, includesObjectId } from "../data/reviews.js";
 import { formatDistance } from "date-fns";
 
@@ -54,21 +53,12 @@ const formatReviews = (reviews) => reviews.map(formatReview);
 
 router
   .get("/", async (req, res) => {
-    const { search } = req.query;
-    if (!search) {
-      const courses = await getAllCourses();
-      return res.render("courses", { courses: formatCourses(courses) });
-    }
-    const parseResults = searchCourseSchema.safeParse(search);
-    if (!parseResults.success) {
-      return res
-        .status(400)
-        .json({ message: parseResults.error.issues[0].message });
-    }
+    const { search, sortBy } = req.query;
     try {
-      const courses = await searchCourse(parseResults.data);
+      const courses = await getCourses({ search, sortBy });
       res.render("courses", {
         search,
+        sortBy,
         courses: formatCourses(courses),
       });
     } catch (e) {

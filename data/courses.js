@@ -2,9 +2,11 @@ import { ObjectId } from "mongodb";
 import { courses, universities } from "../config/mongoCollections.js";
 import {
   createCourseSchema,
+  getCoursesOptionsSchema,
   idSchema,
   updateCourseSchema,
 } from "./validation.js";
+import { log } from "console";
 
 export const createCourse = async (universityId, params) => {
   const parseResults = createCourseSchema.safeParse(params);
@@ -43,6 +45,7 @@ export const createCourse = async (universityId, params) => {
   return {
     _id: insertedCourse.insertedId,
     ...parseResults.data,
+    universityName: university.name,
   };
 };
 
@@ -51,15 +54,27 @@ export const getAllCourses = async () => {
   return coursesCollection.find({}).toArray();
 };
 
-export const getCourses = async (universityId) => {
-  const parseResults = idSchema.safeParse(universityId);
+export const getCourses = async (options) => {
+  const parseResults = getCoursesOptionsSchema.safeParse(options);
   if (!parseResults.success) {
-    throw { status: 400, message: "Invalid id" };
+    throw { status: 400, message: parseResults.error.issues[0].message };
   }
+  const { search, universityId, sortBy } = parseResults.data;
   const coursesCollection = await courses();
-  return coursesCollection
-    .find({ universityId: new ObjectId(universityId) })
-    .toArray();
+  const query = {};
+  if (universityId) {
+    query.universityId = new ObjectId(universityId);
+  }
+  if (search) {
+    query.$text = { $search: search };
+  }
+  const cursor = coursesCollection.find(query);
+  if (sortBy) {
+    const sort =
+      sortBy === "rating-asc" ? { averageRating: 1 } : { averageRating: -1 };
+    cursor.sort(sort);
+  }
+  return cursor.toArray();
 };
 
 export const getCourse = async (id) => {

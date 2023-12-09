@@ -68,6 +68,12 @@ await createReview(userId.toString(), courseId.toString(), {
   content: "Great course!",
 });
 
+await coursesCollection.createIndex({
+  courseCode: "text",
+  courseName: "text",
+  professors: "text",
+});
+
 console.info("✅ Seeding complete");
 
 process.exit(0);

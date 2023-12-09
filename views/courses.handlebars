@@ -1,13 +1,38 @@
+<script src="/public/js/courses.js" defer></script>
+
 <main class="container">
-  <h1 class="text-center">Search for courses</h1>
-  <form action="/courses" method="GET">
-    <label for="search-universities-input">Course name or code</label>
-    <input
-      type="text"
-      name="search"
-      id="search-course-input"
-      value="{{ search }}"
-    />
+  <h1 class="text-center">Courses</h1>
+  <form method="GET" id="search-form">
+    <div class="row">
+      <div class="col">
+        <label for="search-input" class="form-label"
+          >Course name, code, or professor name</label
+        >
+        <input
+          class="form-control"
+          type="text"
+          name="search"
+          id="search-input"
+          value="{{ search }}"
+        />
+      </div>
+      <div class="col">
+        <label for="sort-by-select" class="form-label">Sort by</label>
+        <select
+          class="form-select"
+          name="sortBy"
+          id="sort-by-select"
+          data-value="{{ sortBy }}"
+        >
+          <option selected value></option>
+          <option value="rating-desc">Rating high-to-low</option>
+          <option value="rating-asc">Rating low-to-high</option>
+        </select>
+      </div>
+      <div class="col col-sm-auto d-flex align-items-end">
+        <input type="submit" class="btn btn-primary" value="Search" />
+      </div>
+    </div>
   </form>
   <hr />
   <div class="container vstack gap-2">
@@ -17,9 +42,24 @@
     {{#each courses as |course|}}
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">{{ course.courseName }}</h5>
-        <p class="card-subtitle">{{ course.courseCode }}</p>
-        <p class="card-text">{{ course.professors }}</p>
+        <div class="row">
+          <div class="col">
+            <h5 class="card-title">{{ course.courseName }}</h5>
+            <h6 class="card-subtitle">{{ course.universityName }}</h6>
+            <p class="card-text">{{ course.courseCode }}</p>
+            <p class="card-text">{{ course.professors }}</p>
+          </div>
+          <div class="col">
+            <input
+              name="rating"
+              class="review-rating rating mb-2"
+              data-min="0"
+              data-max="5"
+              data-step="0.5"
+              value="{{ course.averageRating }}"
+            />
+          </div>
+        </div>
         <a
           class="btn btn-primary stretched-link"
           href="/courses/{{ course._id }}"
