@@ -86,23 +86,15 @@ router
     try {
       const course = await getCourse(id);
       let reviews = await getReviews(id);
-      if (req.session.user) {
-        const userId = req.session.user._id;
-        let review = null;
-        if ((review = getUserReview(reviews, userId))) {
-          reviews = removeUserReview(reviews, userId);
-        }
-        return res.render("course", {
-          course: formatCourse(course),
-          reviews: formatReviews(addCurrentVotes(reviews, userId)),
-          review,
-        });
-      } else {
-        return res.render("course", {
-          course: formatCourse(course),
-          reviews: formatReviews(reviews),
-        });
-      }
+      const isLoggedIn = !!req.session.user;
+      const userId = req.session.user?._id;
+      return res.render("course", {
+        course: formatCourse(course),
+        reviews: formatReviews(
+          isLoggedIn ? addCurrentVotes(reviews, userId) : reviews,
+        ),
+        review: isLoggedIn && getUserReview(reviews, userId),
+      });
     } catch (e) {
       return res.status(e.status).render("error", e);
     }
