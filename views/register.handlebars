@@ -1,27 +1,57 @@
 <script defer type="text/javascript" src="/public/js/register.js"></script>
 
-<div>
-  <form id="register-form" method="POST" action="/auth/register">
-    <label for="username-input">Username</label>
-    <input type="text" name="username" id="username-input" />
-    <label for="email-input">Email</label>
-    <input type="email" name="email" id="email-input" />
-    <label for="password-input">Password</label>
-    <input type="password" name="password" id="password-input" />
-    <label for="confirm-password-input">Confirm Password</label>
-    <input
-      type="password"
-      name="confirm-password-input"
-      id="confirm-password-input"
-    />
-    <label for="univesity-input">University</label>
-    <select name="universityId" id="university-input">
-      {{#each universities as |university|}}
-      <option value="{{ university._id }}">{{ university.name }}</option>
-      {{/each}}
-      <option>Other</option>
-    </select>
-    <button>Log In</button>
+{{!-- do this at one point https://getbootstrap.com/docs/5.3/forms/validation/ --}}
+<div class="container">
+  <form
+    id="register-form"
+    class="border rounded-2 p-2 m-2"
+    method="POST"
+    action="/auth/register"
+  >
+    <div class="mb-3">
+      <label class="form-label" for="username-input">Username</label>
+      <input
+        class="form-control"
+        type="text"
+        name="username"
+        id="username-input"
+      />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="email-input">Email</label>
+      <input class="form-control" type="email" name="email" id="email-input" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="password-input">Password</label>
+      <input
+        class="form-control"
+        type="password"
+        name="password"
+        id="password-input"
+      />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="confirm-password-input"
+        >Confirm Password</label
+      >
+      <input
+        class="form-control"
+        type="password"
+        name="confirm-password-input"
+        id="confirm-password-input"
+      />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="univesity-input">University</label>
+      <select class="form-select" name="universityId" id="university-input">
+        {{#each universities as |university|}}
+        <option value="{{ university._id }}">{{ university.name }}</option>
+        {{/each}}
+        <option>Other</option>
+      </select>
+    </div>
+    <input type="submit" class="btn btn-primary" />
+    <a role="button" class="btn btn-secondary" href="/auth/login">Log In</a>
     <p id="register-form-error"></p>
   </form>
 </div>
