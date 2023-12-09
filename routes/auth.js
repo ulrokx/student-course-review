@@ -48,7 +48,9 @@ router
       await register(parseResults.data);
       return res.redirect("/auth/login");
     } catch (e) {
-      return res.status(e.status).send(e);
+      return res
+        .status(e.status)
+        .render("error", { status: e.status, message: e });
     }
   })
   .get("/logout", async (req, res) => {
