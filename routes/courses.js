@@ -62,7 +62,11 @@ router
     const parseResults = searchCourseSchema.safeParse(search);
     if (!parseResults.success) {
       return res
-        .status(400).render("error", {status: 400, message: parseResults.error.issues[0].message})
+        .status(400)
+        .render("error", {
+          status: 400,
+          message: parseResults.error.issues[0].message,
+        });
     }
     try {
       const courses = await searchCourse(parseResults.data);
@@ -79,8 +83,11 @@ router
     const parseResults = idSchema.safeParse(id);
     if (!parseResults.success) {
       return res
-        .status(400).render("error",{status: 400, message: parseResults.error.issues[0].message })
-        
+        .status(400)
+        .render("error", {
+          status: 400,
+          message: parseResults.error.issues[0].message,
+        });
     }
     try {
       const course = await getCourse(id);
