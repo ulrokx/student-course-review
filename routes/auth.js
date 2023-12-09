@@ -21,15 +21,15 @@ router
     const parseResults = loginSchema.safeParse(body);
     if (!parseResults.success) {
       return res
-        .status(400)
-        .json({ message: parseResults.error.issues[0].message });
+        .status(400).render("error", {status: 400, message: parseResults.error.issues[0].message})
+        
     }
     try {
       const user = await login(parseResults.data);
       req.session.user = user;
       return res.redirect(redirect ?? "/");
     } catch (e) {
-      return res.status(e.status).send(e);
+      return res.status(e.status).render("login", {error: e.message})
     }
   })
   .get("/register", async (req, res) => {
@@ -40,14 +40,14 @@ router
     const parseResults = registerSchema.safeParse(body);
     if (!parseResults.success) {
       return res
-        .status(400)
-        .json({ message: parseResults.error.issues[0].message });
+        .status(400).render("register", {error: parseResults.error.issues[0].message})
+       
     }
     try {
       await register(parseResults.data);
       return res.redirect("/auth/login");
     } catch (e) {
-      return res.status(e.status).send(e);
+      return res.status(e.status).render("error", {status: e.status, message: e})
     }
   })
   .get("/logout", async (req, res) => {
