@@ -20,12 +20,10 @@ router
     const { redirect } = req.query;
     const parseResults = loginSchema.safeParse(body);
     if (!parseResults.success) {
-      return res
-        .status(400)
-        .render("error", {
-          status: 400,
-          message: parseResults.error.issues[0].message,
-        });
+      return res.status(400).render("error", {
+        status: 400,
+        message: parseResults.error.issues[0].message,
+      });
     }
     try {
       const user = await login(parseResults.data);

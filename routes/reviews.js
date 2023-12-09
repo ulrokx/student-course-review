@@ -27,12 +27,10 @@ router.post("/vote", async (req, res) => {
   });
   const idParseResults = idSchema.safeParse(userId);
   if (!paramsParseResults.success) {
-    return res
-      .status(400)
-      .render("error", {
-        status: 400,
-        message: paramsParseResults.error.issues[0].message,
-      });
+    return res.status(400).render("error", {
+      status: 400,
+      message: paramsParseResults.error.issues[0].message,
+    });
   }
   if (!idParseResults.success) {
     return res
@@ -59,12 +57,10 @@ router.post("/:id", async (req, res) => {
   });
   const idParseResults = idSchema.safeParse(courseId);
   if (!paramsParseResults.success) {
-    return res
-      .status(400)
-      .render("error", {
-        status: 400,
-        message: paramsParseResults.error.issues[0].message,
-      });
+    return res.status(400).render("error", {
+      status: 400,
+      message: paramsParseResults.error.issues[0].message,
+    });
   }
   if (!idParseResults.success) {
     return res
@@ -89,12 +85,10 @@ router.patch("/:id", async (req, res) => {
   });
   const idParseResults = idSchema.safeParse(courseId);
   if (!paramsParseResults.success) {
-    return res
-      .status(400)
-      .render("error", {
-        status: 400,
-        message: paramsParseResults.error.issues[0].message,
-      });
+    return res.status(400).render("error", {
+      status: 400,
+      message: paramsParseResults.error.issues[0].message,
+    });
   }
   if (!idParseResults.success) {
     return res
