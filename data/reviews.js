@@ -197,7 +197,10 @@ export const getReviews = async (courseId) => {
     throw { status: 400, message: "Invalid id" };
   }
   const reviewsCollection = await reviews();
-  return reviewsCollection.find({ courseId: new ObjectId(courseId) }).toArray();
+  return reviewsCollection
+    .find({ courseId: new ObjectId(courseId) })
+    .sort({ score: -1 })
+    .toArray();
 };
 
 export const includesObjectId = (arr, id) =>
@@ -288,4 +291,21 @@ export const updateVote = async (userId, params) => {
       ? "downvote"
       : "novote",
   };
+};
+
+export const getRatingCounts = async (courseId) => {
+  const parseResults = idSchema.safeParse(courseId);
+  if (!parseResults.success) {
+    throw { status: 400, message: "Invalid id" };
+  }
+  const reviewsCollection = await reviews();
+  const courseReviews = await reviewsCollection
+    .find({ courseId: new ObjectId(courseId) })
+    .toArray();
+  // count how many 1, 2, 3, 4, 5 star reviews, round up
+  const counts = [0, 0, 0, 0, 0];
+  courseReviews.forEach((review) => {
+    counts[Math.ceil(review.rating) - 1]++;
+  });
+  return counts;
 };

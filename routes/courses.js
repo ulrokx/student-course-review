@@ -1,7 +1,11 @@
 import { Router } from "express";
 import { getAllCourses, getCourse, getCourses } from "../data/courses.js";
 import { idSchema } from "../data/validation.js";
-import { getReviews, includesObjectId } from "../data/reviews.js";
+import {
+  getRatingCounts,
+  getReviews,
+  includesObjectId,
+} from "../data/reviews.js";
 import { formatDistance } from "date-fns";
 
 const router = Router();
@@ -76,6 +80,7 @@ router
     try {
       const course = await getCourse(id);
       let reviews = await getReviews(id);
+      const ratingCounts = await getRatingCounts(id);
       const isLoggedIn = !!req.session.user;
       const userId = req.session.user?._id;
       return res.render("course", {
@@ -84,6 +89,7 @@ router
           isLoggedIn ? addCurrentVotes(reviews, userId) : reviews,
         ),
         review: isLoggedIn && getUserReview(reviews, userId),
+        ratingCounts,
       });
     } catch (e) {
       return res.status(e.status).render("error", e);

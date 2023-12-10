@@ -7,7 +7,11 @@
       <h2>{{ course.courseCode }}</h2>
       <p>{{ course.professors }}</p>
     </div>
-    <div class="col">
+    <div
+      class="col d-flex flex-row justify-content-end"
+      style="height: 256px; width: 256px"
+    >
+      <canvas id="ratings-pie" data-data="{{asJSON ratingCounts }}"></canvas>
       <h2 class="float-end">Average Rating: {{ course.averageRating }}</h2>
     </div>
   </div>

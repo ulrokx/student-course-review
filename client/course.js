@@ -3,6 +3,9 @@ import { useVote } from "./vote.js";
 import { createReviewSchema } from "../data/validation.js";
 import "bootstrap-star-rating";
 import { useConfirmDelete } from "./confirmDelete.js";
+import { Chart, PieController, ArcElement, Tooltip, Legend } from "chart.js";
+
+Chart.register(PieController, ArcElement, Tooltip, Legend);
 
 (($) => {
   const reviewIds = $(".review")
@@ -39,5 +42,29 @@ import { useConfirmDelete } from "./confirmDelete.js";
       method: "DELETE",
     });
     window.location.reload();
+  });
+
+  const pie = $("#ratings-pie");
+
+  const data = pie.data("data");
+
+  const chart = new Chart(pie, {
+    type: "pie",
+    data: {
+      labels: ["1 Star", "2 Stars", "3 Stars", "4 Stars", "5 Stars"],
+      datasets: [
+        {
+          label: "Ratings",
+          data,
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(255, 159, 64, 0.2)",
+            "rgba(255, 205, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+          ],
+        },
+      ],
+    },
   });
 })(jQuery);
