@@ -118,7 +118,9 @@ describe("data/courses", () => {
       courses.mockResolvedValue({
         find: coursesFind,
       });
-      const result = await getCourses(universityId.toString());
+      const result = await getCourses({
+        universityId: universityId.toString(),
+      });
       expect(result).toHaveLength(1);
       expect(result[0]).toHaveProperty("_id");
       expect(result[0]).toHaveProperty("professors", ["Patrick Hill"]);

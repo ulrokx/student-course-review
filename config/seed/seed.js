@@ -74,6 +74,11 @@ await coursesCollection.createIndex({
   professors: "text",
 });
 
+await universitiesCollection.createIndex({
+  name: "text",
+  location: "text",
+});
+
 console.info("✅ Seeding complete");
 
 process.exit(0);

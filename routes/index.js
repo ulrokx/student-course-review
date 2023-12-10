@@ -1,12 +1,12 @@
 import authRouter from "./auth.js";
 import adminRouter from "./admin.js";
-import searchRouter from "./search.js";
+import homeRouter from "./home.js";
 import universitiesRouter from "./universities.js";
 import coursesRouter from "./courses.js";
 import reviewsRouter from "./reviews.js";
 
 const constructorMethod = async (app) => {
-  app.use("/", searchRouter);
+  app.use("/", homeRouter);
   app.use("/auth", authRouter);
   app.use("/admin", adminRouter);
   app.use("/universities", universitiesRouter);

@@ -2,13 +2,23 @@ import { ObjectId } from "bson";
 import { universities } from "../config/mongoCollections.js";
 import {
   createUniversitySchema,
+  getUniversitiesOptionsSchema,
   idSchema,
   updateUniversitySchema,
 } from "./validation.js";
 
-export const getUniversities = async () => {
+export const getUniversities = async (options = {}) => {
+  const parseResults = getUniversitiesOptionsSchema.safeParse(options);
+  if (!parseResults.success) {
+    throw { status: 400, message: parseResults.error.issues[0].message };
+  }
+  const { search } = parseResults.data;
   const universitiesCollection = await universities();
-  return universitiesCollection.find().toArray();
+  const query = {};
+  if (search) {
+    query.$text = { $search: search };
+  }
+  return universitiesCollection.find(query).toArray();
 };
 
 export const getUniversity = async (id) => {

@@ -6,25 +6,24 @@ import {
   searchCourseSchema,
   searchUniversitySchema,
 } from "../data/validation.js";
-import { searchUniversity } from "../data/search.js";
 
 const router = Router();
 
 router
   .get("/", async (req, res) => {
     const { search } = req.query;
-    if (!search) {
-      const universities = await getUniversities();
-      return res.render("universities", { universities });
-    }
-    const parseResults = searchUniversitySchema.safeParse(search);
-    if (!parseResults.success) {
-      return res
-        .status(400)
-        .json({ message: parseResults.error.issues[0].message });
+    const options = {};
+    if (search) {
+      const parseResults = searchUniversitySchema.safeParse(search);
+      if (!parseResults.success) {
+        return res
+          .status(400)
+          .json({ message: parseResults.error.issues[0].message });
+      }
+      options.search = parseResults.data;
     }
     try {
-      const universities = await searchUniversity(parseResults.data);
+      const universities = await getUniversities(options);
       res.render("universities", {
         universities,
         search,
@@ -60,7 +59,7 @@ router
       }
       courses = await getCourses({ search, universityId: id });
     } else {
-      courses = await getCourses(id);
+      courses = await getCourses({ universityId: id });
     }
 
     try {

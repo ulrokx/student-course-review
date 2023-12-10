@@ -63,6 +63,10 @@ export const getCoursesOptionsSchema = z.object({
   search: searchCourseSchema.or(z.undefined()).or(z.literal("")),
 });
 
+export const getUniversitiesOptionsSchema = z.object({
+  search: searchUniversitySchema.or(z.undefined()).or(z.literal("")),
+});
+
 const courseCodeSchema = z.string().min(3).max(10);
 
 const courseNameSchema = z.string().min(3).max(40);
