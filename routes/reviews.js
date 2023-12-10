@@ -4,7 +4,12 @@ import {
   idSchema,
   updateVoteSchema,
 } from "../data/validation.js";
-import { createReview, updateReview, updateVote } from "../data/reviews.js";
+import {
+  createReview,
+  deleteReview,
+  updateReview,
+  updateVote,
+} from "../data/reviews.js";
 
 const router = Router();
 
@@ -88,6 +93,21 @@ router.patch("/:id", async (req, res) => {
   try {
     await updateReview(userId, courseId, paramsParseResults.data);
     res.redirect(`/courses/${courseId}`);
+  } catch (e) {
+    res.status(e.status).render("error", e);
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  const reviewId = req.params.id;
+  const userId = req.session.user._id;
+  const reviewIdParseResults = idSchema.safeParse(reviewId);
+  if (!reviewIdParseResults.success) {
+    return res.status(400).json({ message: "Invalid id" });
+  }
+  try {
+    await deleteReview(reviewId, userId);
+    res.status(200);
   } catch (e) {
     res.status(e.status).render("error", e);
   }

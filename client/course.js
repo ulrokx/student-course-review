@@ -2,6 +2,7 @@ import jQuery from "jquery";
 import { useVote } from "./vote.js";
 import { createReviewSchema } from "../data/validation.js";
 import "bootstrap-star-rating";
+import { useConfirmDelete } from "./confirmDelete.js";
 
 (($) => {
   const reviewIds = $(".review")
@@ -30,5 +31,13 @@ import "bootstrap-star-rating";
     if (!parseResults.success) {
       e.preventDefault();
     }
+  });
+
+  useConfirmDelete(".delete-btn", async (id) => {
+    const result = await $.ajax({
+      url: `/reviews/${id}`,
+      method: "DELETE",
+    });
+    window.location.reload();
   });
 })(jQuery);

@@ -144,6 +144,53 @@ export const updateReview = async (userId, courseId, params) => {
   };
 };
 
+export const deleteReview = async (reviewId, userId) => {
+  const reviewIdParseResults = idSchema.safeParse(reviewId);
+  const userIdParseResults = idSchema.safeParse(userId);
+  if (!reviewIdParseResults.success) {
+    throw { status: 400, message: "Invalid id" };
+  }
+  if (!userIdParseResults.success) {
+    throw { status: 400, message: "Invalid id" };
+  }
+  const reviewsCollection = await reviews();
+  reviewId = new ObjectId(reviewId);
+  userId = new ObjectId(userId);
+  const review = await reviewsCollection.findOne({ _id: reviewId });
+  if (!review) {
+    throw { status: 404, message: "Review not found" };
+  }
+  if (userId && !review.userId.equals(userId)) {
+    throw { status: 403, message: "Forbidden" };
+  }
+  const coursesCollection = await courses();
+  const course = await coursesCollection.findOne({ _id: review.courseId });
+  if (!course) {
+    throw { status: 404, message: "Course not found" };
+  }
+  const updatedCourse = await coursesCollection.updateOne(
+    { _id: review.courseId },
+    {
+      $set: {
+        averageRating:
+          (course.averageRating * course.reviewCount - review.rating) /
+          (course.reviewCount - 1),
+      },
+      $inc: { reviewCount: -1 },
+    },
+  );
+  if (!updatedCourse.acknowledged) {
+    throw { status: 500, message: "Could not delete review" };
+  }
+  const deletedReview = await reviewsCollection.deleteOne({
+    _id: reviewId,
+  });
+  if (!deletedReview.acknowledged) {
+    throw { status: 500, message: "Could not delete review" };
+  }
+  return true;
+};
+
 export const getReviews = async (courseId) => {
   const parseResults = idSchema.safeParse(courseId);
   if (!parseResults.success) {

@@ -44,6 +44,16 @@
       value="{{#if review}}Edit Review {{else}}Submit Review{{/if}}"
       class="btn btn-primary"
     />
+    {{#if review}}
+    <a
+      role="button"
+      class="delete-btn btn btn-warning"
+      data-id="{{ review._id }}"
+    >
+      Delete
+    </a>
+
+    {{/if}}
   </form>
   <hr />
   {{/if}}
