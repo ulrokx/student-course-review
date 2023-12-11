@@ -1,4 +1,5 @@
 import ObjectID from "bson-objectid";
+import xss from "xss";
 import { z } from "zod";
 
 export const idSchema = z
@@ -6,20 +7,25 @@ export const idSchema = z
   .trim()
   .refine((val) => ObjectID.isValid(val), {
     message: "Invalid id",
-  });
+  })
+  .refine(xss);
 
 const usernameRegExp = new RegExp(/^[a-zA-Z0-9_.\-]{3,16}$/);
 
-const emailSchema = z.string().trim().email();
+const emailSchema = z.string().trim().email().refine(xss);
 
 const passwordSchema = z
   .string()
   .min(8, { message: "Password must be at least 8 characters long" });
 
-const usernameSchema = z.string().trim().regex(usernameRegExp, {
-  message:
-    "Username must be between 3 and 16 characters long and can only contain letters, numbers, underscores, hyphens, and periods",
-});
+const usernameSchema = z
+  .string()
+  .trim()
+  .regex(usernameRegExp, {
+    message:
+      "Username must be between 3 and 16 characters long and can only contain letters, numbers, underscores, hyphens, and periods",
+  })
+  .transform(xss);
 
 export const registerSchema = z.object({
   email: emailSchema,
@@ -35,14 +41,19 @@ export const loginSchema = z.object({
 
 const universityNameRegExp = new RegExp(/[a-zA-Z'-]/);
 
-const universityNameSchema = z.string().min(10).regex(universityNameRegExp);
+const universityNameSchema = z
+  .string()
+  .min(10)
+  .regex(universityNameRegExp)
+  .transform(xss);
 
 const universityLocationRegExp = new RegExp(/[a-zA-Z',-]/);
 
 const universityLocationSchema = z
   .string()
   .min(3)
-  .regex(universityLocationRegExp);
+  .regex(universityLocationRegExp)
+  .transform(xss);
 
 export const createUniversitySchema = z.object({
   name: universityNameSchema,
@@ -51,9 +62,9 @@ export const createUniversitySchema = z.object({
 
 export const updateUniversitySchema = createUniversitySchema.partial();
 
-export const searchUniversitySchema = z.string().trim().min(1);
+export const searchUniversitySchema = z.string().trim().min(1).transform(xss);
 
-export const searchCourseSchema = z.string().trim().min(1);
+export const searchCourseSchema = z.string().trim().min(1).transform(xss);
 
 export const sortByCourseSchema = z.enum(["rating-asc", "rating-desc"]);
 
@@ -67,11 +78,13 @@ export const getUniversitiesOptionsSchema = z.object({
   search: searchUniversitySchema.or(z.undefined()).or(z.literal("")),
 });
 
-const courseCodeSchema = z.string().min(3).max(10);
+const courseCodeSchema = z.string().min(3).max(10).transform(xss);
 
-const courseNameSchema = z.string().min(3).max(40);
+const courseNameSchema = z.string().min(3).max(40).transform(xss);
 
-const professorsSchema = z.array(z.string().min(3).max(40)).min(1);
+const professorsSchema = z
+  .array(z.string().min(3).max(40).transform(xss))
+  .min(1);
 
 export const createCourseSchema = z.object({
   courseCode: courseCodeSchema,
@@ -92,7 +105,7 @@ const reviewRatingSchema = z.preprocess(
     }),
 );
 
-const reviewContentSchema = z.string().min(10).max(500);
+const reviewContentSchema = z.string().min(10).max(500).transform(xss);
 
 export const createReviewSchema = z.object({
   rating: reviewRatingSchema,
