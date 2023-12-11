@@ -114,24 +114,26 @@ describe("data/reviews", () => {
     it("should get reviews", async () => {
       const courseId = new ObjectId();
       const reviewsFind = jest.fn().mockReturnValue({
-        toArray: () => [
-          {
-            _id: new ObjectId(),
-            courseId,
-            userId: new ObjectId(),
-            rating: 9,
-            content: "Course is fantastic! Great professors as well.",
-            score: 0,
-          },
-          {
-            _id: new ObjectId(),
-            courseId,
-            userId: new ObjectId(),
-            rating: 9,
-            content: "Course is fantastic! Great professors as well.",
-            score: 0,
-          },
-        ],
+        sort: () => ({
+          toArray: () => [
+            {
+              _id: new ObjectId(),
+              courseId,
+              userId: new ObjectId(),
+              rating: 9,
+              content: "Course is fantastic! Great professors as well.",
+              score: 0,
+            },
+            {
+              _id: new ObjectId(),
+              courseId,
+              userId: new ObjectId(),
+              rating: 9,
+              content: "Course is fantastic! Great professors as well.",
+              score: 0,
+            },
+          ],
+        }),
       });
       reviews.mockResolvedValue({
         find: reviewsFind,
