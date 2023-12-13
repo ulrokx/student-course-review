@@ -75,7 +75,10 @@ router
     if (!parseResults.success) {
       return res
         .status(400)
-        .json({ message: parseResults.error.issues[0].message });
+        .render("error", {
+          status: 400,
+          message: parseResults.error.issues[0].message,
+        });
     }
     try {
       const course = await getCourse(id);
