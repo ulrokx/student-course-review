@@ -1,4 +1,5 @@
 import jQuery from "jquery";
+import { loginSchema } from "../data/validation.js";
 
 (($) => {
   const setFormError = (message) => {
@@ -10,9 +11,10 @@ import jQuery from "jquery";
     const email = $("#email-input").val();
     const password = $("#password-input").val();
 
-    if (!email || !password) {
+    const parseResults = loginSchema.safeParse({ email, password });
+    if (!parseResults.success) {
       e.preventDefault();
-      setFormError("Please enter email and password");
+      setFormError(parseResults.error.issues[0].message);
       return;
     }
   });
