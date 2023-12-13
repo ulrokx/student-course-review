@@ -1,4 +1,5 @@
 import jQuery from "jquery";
+import { registerSchema } from "../data/validation.js";
 
 (($) => {
   const setFormError = (message) => {
@@ -12,15 +13,20 @@ import jQuery from "jquery";
     const password = $("#password-input").val();
     const confirmPassword = $("#confirm-password-input").val();
 
-    if (!email || !password || !username) {
-      e.preventDefault();
-      setFormError("Please enter username, email, and password");
-      return;
-    }
-
     if (password !== confirmPassword) {
       e.preventDefault();
       setFormError("Passwords do not match");
+      return;
+    }
+
+    const parseResults = registerSchema.safeParse({
+      username,
+      email,
+      password,
+    });
+    if (!parseResults.success) {
+      e.preventDefault();
+      setFormError(parseResults.error.issues[0].message);
       return;
     }
   });
