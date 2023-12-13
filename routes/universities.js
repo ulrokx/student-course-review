@@ -42,27 +42,21 @@ router
         message: parseResults.error.issues[0].message,
       });
     }
-    const university = await getUniversity(parseResults.data);
-    if (!university) {
-      return res
-        .status(404)
-        .render("error", { status: 404, message: "University not found" });
-    }
-    let courses;
-    if (search) {
-      const parseResults = searchCourseSchema.safeParse(search);
-      if (!parseResults.success) {
-        return res.status(400).render("error", {
-          status: 400,
-          message: parseResults.error.issues[0].message,
-        });
-      }
-      courses = await getCourses({ search, universityId: id });
-    } else {
-      courses = await getCourses({ universityId: id });
-    }
-
     try {
+      const university = await getUniversity(parseResults.data);
+      let courses;
+      if (search) {
+        const parseResults = searchCourseSchema.safeParse(search);
+        if (!parseResults.success) {
+          return res.status(400).render("error", {
+            status: 400,
+            message: parseResults.error.issues[0].message,
+          });
+        }
+        courses = await getCourses({ search, universityId: id });
+      } else {
+        courses = await getCourses({ universityId: id });
+      }
       res.render("university", { university, courses, search });
     } catch (e) {
       res.status(e.status).render("error", e);

@@ -38,7 +38,7 @@ router
     const { id } = req.params;
     try {
       const university = await getUniversity(id);
-      const courses = await getCourses(id);
+      const courses = await getCourses({ universityId: id });
       return res.render("edit-university", { university, courses });
     } catch (e) {
       return res.status(e.status).send(e);
