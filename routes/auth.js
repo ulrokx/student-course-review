@@ -30,7 +30,7 @@ router
       req.session.user = user;
       return res.redirect(redirect ?? "/");
     } catch (e) {
-      return res.status(e.status).send(e);
+      return res.status(e.status).render("login", { error: e.message });
     }
   })
   .get("/register", async (req, res) => {
