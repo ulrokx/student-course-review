@@ -1,16 +1,16 @@
 import $ from "jquery";
 
 export const useVote = (_id) => {
-  const container = $(`#${_id}-vote`);
+  const container = $(`#v-${_id}-vote`);
   let currentVote = container.data("currentvote");
   let score = container.data("score");
-  const scoreText = $(`#${_id}-score`);
-  const upBtn = $(`#${_id}-up-btn`);
-  const downBtn = $(`#${_id}-down-btn`);
-  const upSvg = $(`#${_id}-thumbs-up`);
-  const upSvgFilled = $(`#${_id}-thumbs-up-fill`);
-  const downSvg = $(`#${_id}-thumbs-down`);
-  const downSvgFilled = $(`#${_id}-thumbs-down-fill`);
+  const scoreText = $(`#v-${_id}-score`);
+  const upBtn = $(`#v-${_id}-up-btn`);
+  const downBtn = $(`#v-${_id}-down-btn`);
+  const upSvg = $(`#v-${_id}-thumbs-up`);
+  const upSvgFilled = $(`#v-${_id}-thumbs-up-fill`);
+  const downSvg = $(`#v-${_id}-thumbs-down`);
+  const downSvgFilled = $(`#v-${_id}-thumbs-down-fill`);
 
   const updateSelected = (vote) => {
     if (vote === "upvote") {

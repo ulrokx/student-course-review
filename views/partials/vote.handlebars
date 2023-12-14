@@ -1,11 +1,11 @@
 <div
-  id="{{ _id }}-vote"
+  id="v-{{ _id }}-vote"
   class="d-inline-block d-flex flex-column justify-content-center align-items-center"
   data-currentvote="{{ currentVote }}"
 >
-  <button class="btn" id="{{ _id }}-up-btn">
+  <button class="btn" id="v-{{ _id }}-up-btn">
     <svg
-      id="{{ _id }}-thumbs-up"
+      id="v-{{ _id }}-thumbs-up"
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
@@ -18,7 +18,7 @@
       />
     </svg>
     <svg
-      id="{{ _id }}-thumbs-up-fill"
+      id="v-{{ _id }}-thumbs-up-fill"
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
@@ -32,10 +32,10 @@
       />
     </svg>
   </button>
-  <p class="h3" id="{{ _id }}-score">{{ score }}</p>
-  <button class="btn" id="{{ _id }}-down-btn">
+  <p class="h3" id="v-{{ _id }}-score">{{ score }}</p>
+  <button class="btn" id="v-{{ _id }}-down-btn">
     <svg
-      id="{{ _id }}-thumbs-down"
+      id="v-{{ _id }}-thumbs-down"
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
@@ -48,7 +48,7 @@
       />
     </svg>
     <svg
-      id="{{ _id }}-thumbs-down-fill"
+      id="v-{{ _id }}-thumbs-down-fill"
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"

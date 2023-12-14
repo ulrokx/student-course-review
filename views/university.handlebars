@@ -5,7 +5,7 @@
   <h2>{{ university.location }}</h2>
   <hr />
   <h3>Courses:</h3>
-  <form method="GET" id="search-form">
+  <form method="GET" id="search-form" class="mb-2">
     <label for="search-input" class="form-label"
       >Search by name, code, or professor name</label
     >
@@ -21,8 +21,7 @@
   <h4>Search results for "{{ search }}"</h4>
   {{/if}}
   {{#if courses}}
-
-  <ul class="container vstack gap-2">
+  <div class="container vstack gap-2">
     {{#each courses as |course|}}
     <div class="card">
       <div class="card-body">
@@ -37,7 +36,7 @@
       </div>
     </div>
     {{/each}}
-  </ul>
+  </div>
   {{else}}
   <p>Your search - {{ search }} - did not match any courses.</p>
   <p>Suggestions:</p>
