@@ -1,0 +1,78 @@
+body {
+  background-color: #bda87b;
+}
+h1 {
+  text-align: center;
+  color: darkblue;
+  font-size: 45px;
+}
+h2 {
+  text-align: left;
+  color: darkblue;
+  font-size: 35px;
+}
+p {
+  color: darkblue;
+  font-size: 20px;
+}
+p.card-subtitle {
+  color: darkblue;
+}
+#login-form {
+  color: darkblue;
+  font-size: 25px;
+  background-color: #a18f68;
+}
+#register-form {
+  color: darkblue;
+  font-size: 25px;
+  background-color: #a18f68;
+}
+form {
+  color: darkblue;
+  font-size: 25px;
+}
+a {
+  color: darkblue;
+}
+a:hover {
+  color: navy;
+}
+button {
+  color: darkblue;
+}
+input {
+  color: darkblue;
+}
+ul {
+  list-style: none;
+}
+ul li {
+  padding: 5px 0;
+  border-bottom: 1px solid #ccc;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+table th {
+  background-color: #f2f2f2;
+  padding: 10px;
+  text-align: left;
+}
+table td {
+  padding: 10px;
+}
+.card {
+  background-color: #a18f68;
+}
+.card-title {
+  color: darkblue;
+}
+h3 {
+  color: darkblue;
+}
+li {
+  color: darkblue;
+}
