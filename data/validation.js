@@ -26,7 +26,8 @@ const passwordSchema = z
   .regex(/[0-9]/, { message: "Password must contain at least one number" })
   .regex(/[^a-zA-Z0-9]/, {
     message: "Password must contain at least one special character",
-  });
+  })
+  .regex(/^\S*$/, { message: "Password must not contain spaces" });
 
 const usernameSchema = z
   .string()
