@@ -16,7 +16,7 @@ console.info("🌱 Begin seeding database");
 
 await usersCollection.insertOne({
   email: "admin@stevens.edu",
-  hashedPassword: bcrypt.hashSync("admin123", 10),
+  hashedPassword: bcrypt.hashSync("Admin123!", 10),
   username: "admin",
   admin: true,
 });
@@ -46,6 +46,7 @@ await coursesCollection.insertOne({
   courseCode: "CS 546",
   courseName: "Web Programming",
   professors: ["Patrick Hill", "Michael Phelps"],
+  tags: [],
   universityId,
 });
 
@@ -53,6 +54,7 @@ await coursesCollection.insertOne({
   courseCode: "CS 554",
   courseName: "Web Programming II",
   professors: ["Patrick Hill"],
+  tags: [],
   universityId,
 });
 
@@ -60,6 +62,7 @@ const { insertedId: courseId } = await coursesCollection.insertOne({
   courseCode: "CS 382",
   courseName: "Computer Architecture",
   professors: ["Shudong Hao"],
+  tags: [],
   universityId,
 });
 

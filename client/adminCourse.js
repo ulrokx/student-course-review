@@ -29,7 +29,8 @@ import { updateCourseSchema } from "../data/validation.js";
     if (
       $("#course-name-input").val() !== initialName ||
       $("#course-code-input").val() !== initialCode ||
-      !listEq(getProfessors(), initialProfessors)
+      !listEq(getProfessors(), initialProfessors) ||
+      !listEq(getTags(), initialTags)
     ) {
       $("#course-form-submit").attr("disabled", false);
     } else {
@@ -37,8 +38,10 @@ import { updateCourseSchema } from "../data/validation.js";
     }
   };
   const getProfessors = useEditList("professors", updateSubmitDisabled);
+  const getTags = useEditList("tags", updateSubmitDisabled);
 
   const initialProfessors = getProfessors();
+  const initialTags = getTags();
 
   courseNameInput.on("change keydown paste input", updateSubmitDisabled);
   courseCodeInput.on("change keydown paste input", updateSubmitDisabled);
@@ -49,10 +52,12 @@ import { updateCourseSchema } from "../data/validation.js";
     const courseName = courseNameInput.val().trim();
     const courseCode = courseCodeInput.val().trim();
     const professors = getProfessors();
+    const tags = getTags();
     const parseResults = updateCourseSchema.safeParse({
       courseName,
       courseCode,
       professors,
+      tags,
     });
     if (!parseResults.success) {
       return setFormError(parseResults.error.errors[0].message);

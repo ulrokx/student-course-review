@@ -74,10 +74,12 @@ import { useConfirmDelete } from "./confirmDelete.js";
     const courseName = courseNameInput.val().trim();
     const courseCode = courseCodeInput.val().trim();
     const professors = getProfessors();
+    const tags = getTags();
     const parseResults = createCourseSchema.safeParse({
       courseName,
       courseCode,
       professors,
+      tags,
     });
     if (!parseResults.success) {
       return courseFormSubmit.attr("disabled", true);
@@ -88,6 +90,7 @@ import { useConfirmDelete } from "./confirmDelete.js";
   const courseNameInput = $("#course-name-input");
   const courseCodeInput = $("#course-code-input");
   const getProfessors = useEditList("professors", updateSubmitDisabledCourse);
+  const getTags = useEditList("tags", updateSubmitDisabledCourse);
   const courseFormSubmit = $("#course-form-submit");
 
   courseFormSubmit.attr("disabled", true);
@@ -100,11 +103,13 @@ import { useConfirmDelete } from "./confirmDelete.js";
     const courseName = courseNameInput.val().trim();
     const courseCode = courseCodeInput.val().trim();
     const professors = getProfessors();
+    const tags = getTags();
 
     const parseResults = createCourseSchema.safeParse({
       courseName,
       courseCode,
       professors,
+      tags,
     });
     if (!parseResults.success) {
       return setFormError(parseResults.error.errors[0].message);

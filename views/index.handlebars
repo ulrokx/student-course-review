@@ -5,7 +5,7 @@
       <p>
         Use the search bars below to search for a university or course. You can
         search universities by their name or location. You can search courses by
-        their name, course code, or professor names.
+        their name, course code, tag, or professor names.
       </p>
       <form method="GET" action="/universities">
         <label for="universities-search-input">Search for a university:</label>
@@ -23,7 +23,7 @@
       <h2>Search courses at {{ user.universityName }}</h2>
       <p>
         Use the search bar below to search for a course at
-        {{ user.universityName }}. You can search by course code, name, or
+        {{ user.universityName }}. You can search by course code, name, tag, or
         professor name.
       </p>
       <form method="GET" action="/universities/{{ user.universityId }}">

@@ -10,10 +10,19 @@ import { formatDistance } from "date-fns";
 
 const router = Router();
 
-const formatCourse = (course) => ({
-  ...course,
-  professors: course.professors.join(", "),
-});
+const formatCourse = (course) => {
+  const formattedCourse = { ...course };
+
+  if (Array.isArray(formattedCourse.professors)) {
+    formattedCourse.professors = formattedCourse.professors.join(", ");
+  }
+
+  if (Array.isArray(formattedCourse.tags)) {
+    formattedCourse.tags = formattedCourse.tags.join(", ");
+  }
+
+  return formattedCourse;
+};
 
 const formatCourses = (courses) => courses.map(formatCourse);
 

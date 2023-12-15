@@ -97,10 +97,13 @@ const professorsSchema = z
   .array(z.string().min(3).max(40).transform(xss))
   .min(1);
 
+const tagsSchema = z.array(z.string().min(3).max(10).transform(xss));
+
 export const createCourseSchema = z.object({
   courseCode: courseCodeSchema,
   courseName: courseNameSchema,
   professors: professorsSchema,
+  tags: tagsSchema,
 });
 
 export const updateCourseSchema = createCourseSchema.partial();
