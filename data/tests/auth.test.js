@@ -25,7 +25,7 @@ describe("data/auth", () => {
       });
       const params = {
         email: "bob@email.com",
-        password: "bob123bob",
+        password: "Bob123bob!",
         username: "bob123",
       };
       const user = await register(params);
@@ -49,7 +49,7 @@ describe("data/auth", () => {
         register({
           email: "taken@email.com",
           username: "taken",
-          password: "123456789",
+          password: "123456789aB!",
         }),
       ).rejects.toHaveProperty("status", 400);
       expect(insertOne).not.toHaveBeenCalled();
@@ -66,7 +66,7 @@ describe("data/auth", () => {
       });
       const params = {
         email: "bob@email.com",
-        password: "bob123bob",
+        password: "Bob123bob!",
         username: "bob123",
       };
       await expect(() => register(params)).rejects.toHaveProperty(
@@ -96,7 +96,7 @@ describe("data/auth", () => {
       users.mockReturnValue({ findOne });
       const user = await login({
         email: "bob123@email.com",
-        password: "12345678",
+        password: "12345678aB!",
       });
       expect(user).not.toHaveProperty("hashedPassword");
       expect(ObjectId.isValid(user._id)).toBeTruthy();
