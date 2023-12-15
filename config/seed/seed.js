@@ -46,7 +46,7 @@ await coursesCollection.insertOne({
   courseCode: "CS 546",
   courseName: "Web Programming",
   professors: ["Patrick Hill", "Michael Phelps"],
-  tags: [],
+  tags: ["test"],
   universityId,
 });
 
@@ -75,6 +75,7 @@ await coursesCollection.createIndex({
   courseCode: "text",
   courseName: "text",
   professors: "text",
+  tags: "text",
 });
 
 await universitiesCollection.createIndex({

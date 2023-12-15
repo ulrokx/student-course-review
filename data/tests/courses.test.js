@@ -33,6 +33,7 @@ describe("data/courses", () => {
         courseCode: "CS546",
         courseName: "Web Programming",
         professors: ["Patrick Hill"],
+        tags: [],
       });
       expect(result).toHaveProperty("_id");
       expect(result).toHaveProperty("professors", ["Patrick Hill"]);
@@ -48,6 +49,7 @@ describe("data/courses", () => {
           courseCode: "CS546",
           courseName: "Web Programming",
           professors: ["Patrick Hill"],
+          tags: [],
         }),
       ).rejects.toHaveProperty("status", 404);
     });
@@ -71,6 +73,7 @@ describe("data/courses", () => {
           courseCode: "CS546",
           courseName: "Web Programming",
           professors: ["Patrick Hill"],
+          tags: [],
         }),
       ).rejects.toHaveProperty("status", 400);
     });
@@ -97,6 +100,7 @@ describe("data/courses", () => {
           courseCode: "CS546",
           courseName: "Web Programming",
           professors: ["Patrick Hill"],
+          tags: [],
         }),
       ).rejects.toHaveProperty("status", 500);
     });
@@ -137,6 +141,7 @@ describe("data/courses", () => {
           courseCode: "CS546",
           courseName: "Web Programming",
           professors: ["Patrick Hill"],
+          tags: [],
         })
         .mockResolvedValueOnce(null);
       const coursesFindOneAndUpdate = jest.fn().mockResolvedValue({
@@ -144,6 +149,7 @@ describe("data/courses", () => {
         courseCode: "CS554",
         courseName: "Web Programming II",
         professors: ["Patrick Hill"],
+        tags: [],
       });
       courses.mockResolvedValue({
         findOne: coursesFindOne,
@@ -159,6 +165,7 @@ describe("data/courses", () => {
         courseCode: "CS554",
         courseName: "Web Programming II",
         professors: ["Patrick Hill"],
+        tags: [],
       });
       expect(result).toHaveProperty("_id");
       expect(result).toHaveProperty("professors", ["Patrick Hill"]);
@@ -174,6 +181,7 @@ describe("data/courses", () => {
           courseCode: "CS554",
           courseName: "Web Programming II",
           professors: ["Patrick Hill"],
+          tags: [],
         }),
       ).rejects.toHaveProperty("status", 404);
     });
@@ -198,6 +206,7 @@ describe("data/courses", () => {
           courseCode: "CS554",
           courseName: "Web Programming II",
           professors: ["Patrick Hill"],
+          tags: [],
         }),
       ).rejects.toHaveProperty("status", 500);
     });
@@ -225,6 +234,7 @@ describe("data/courses", () => {
           courseCode: "CS554",
           courseName: "Web Programming II",
           professors: ["Patrick Hill"],
+          tags: [],
         }),
       ).rejects.toHaveProperty("status", 400);
     });
