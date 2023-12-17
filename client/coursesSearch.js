@@ -7,7 +7,6 @@ export const useCourseSearch = () => {
     sortBySelect.val(sortBy);
   }
   searchForm.on("submit", (e) => {
-    debugger;
     const searchQuery = searchInput.val();
     const sortBy = sortBySelect.val();
     // if there is no query, load all

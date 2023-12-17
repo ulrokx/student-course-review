@@ -15,8 +15,10 @@ import {
 } from "../data/courses.js";
 import {
   createCourseSchema,
+  createUniversitySchema,
   idSchema,
   updateCourseSchema,
+  updateUniversitySchema,
 } from "../data/validation.js";
 
 const router = Router();
@@ -36,6 +38,12 @@ router
   })
   .get("/universities/:id", async (req, res) => {
     const { id } = req.params;
+    const parseResults = idSchema.safeParse(id);
+    if (!parseResults.success) {
+      return res
+        .status(400)
+        .render("error", { status: 400, message: "Invalid id" });
+    }
     try {
       const university = await getUniversity(id);
       const courses = await getCourses({ universityId: id });
@@ -46,6 +54,10 @@ router
   })
   .post("/universities", async (req, res) => {
     const { name, location } = req.body;
+    const parseResults = createUniversitySchema.safeParse(req.body);
+    if (!parseResults.success) {
+      return res.status(400).json(parseResults.error);
+    }
     try {
       const university = await createUniversity({ name, location });
       return res.status(200).json(university);
@@ -56,6 +68,10 @@ router
   .patch("/universities/:id", async (req, res) => {
     const { id } = req.params;
     const { name, location } = req.body;
+    const parseResults = updateUniversitySchema.safeParse(req.body);
+    if (!parseResults.success) {
+      return res.status(400).json(parseResults.error);
+    }
     try {
       const university = await updateUniversity(id, { name, location });
       return res.status(200).json(university);
@@ -66,6 +82,10 @@ router
   })
   .delete("/universities/:id", async (req, res) => {
     const { id } = req.params;
+    const parseResults = idSchema.safeParse(id);
+    if (!parseResults.success) {
+      return res.status(400).json(parseResults.error);
+    }
     try {
       await deleteUniversity(id);
       return res.status(200).json({ message: "University deleted" });
@@ -75,6 +95,12 @@ router
   })
   .get("/courses/:id", async (req, res) => {
     const { id } = req.params;
+    const parseResults = idSchema.safeParse(id);
+    if (!parseResults.success) {
+      return res
+        .status(400)
+        .render("error", { status: 400, message: "Invalid id" });
+    }
     try {
       const course = await getCourse(id);
       return res.render("edit-course", { course });

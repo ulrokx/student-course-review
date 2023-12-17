@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getAllCourses, getCourse, getCourses } from "../data/courses.js";
-import { idSchema } from "../data/validation.js";
+import { getCoursesOptionsSchema, idSchema } from "../data/validation.js";
 import {
   getRatingCounts,
   getReviews,
@@ -67,6 +67,13 @@ const formatReviews = (reviews) => reviews.map(formatReview);
 router
   .get("/", async (req, res) => {
     const { search, sortBy } = req.query;
+    const parseResults = getCoursesOptionsSchema.safeParse({ sortBy, search });
+    if (!parseResults.success) {
+      return res.status(400).render("error", {
+        status: 400,
+        message: parseResults.error.issues[0].message,
+      });
+    }
     try {
       const courses = await getCourses({ search, sortBy });
       res.render("courses", {

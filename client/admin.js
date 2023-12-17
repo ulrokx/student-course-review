@@ -1,5 +1,6 @@
 import jQuery from "jquery";
 import { useConfirmDelete } from "./confirmDelete.js";
+import { createUniversitySchema } from "../data/validation.js";
 
 (($) => {
   const createUniversityError = $("#university-form-error");
@@ -35,8 +36,9 @@ import { useConfirmDelete } from "./confirmDelete.js";
     const name = $("#name-input").val().trim();
     const location = $("#location-input").val().trim();
 
-    if (!name || !location) {
-      return setFormError("Please fill out all fields");
+    const parseResults = createUniversitySchema.safeParse({ name, location });
+    if (!parseResults.success) {
+      return setFormError(parseResults.error.issues[0].message);
     }
 
     try {
