@@ -14,15 +14,19 @@
     {{#if search}}
     <h2>Search results for "{{ search }}"</h2>
     {{/if}}
-    {{#each universities as |university|}}
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">
-          <a href="universities/{{ university._id }}">{{ university.name }}</a>
-        </h5>
-        <p class="card-subtitle">{{ university.location }}</p>
+    <div class="container vstack gap-2">
+      {{#each universities as |university|}}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="universities/{{ university._id }}">{{
+              university.name
+            }}</a>
+          </h5>
+          <p class="card-subtitle">{{ university.location }}</p>
+        </div>
       </div>
+      {{/each}}
     </div>
-    {{/each}}
   </div>
 </main>

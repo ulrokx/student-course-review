@@ -1,0 +1,26 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col">
+        <h5 class="card-title">{{ course.courseName }}</h5>
+        <h6 class="card-subtitle">{{ course.universityName }}</h6>
+        <p class="card-text">{{ course.courseCode }}</p>
+        <p class="card-text">{{ course.professors }}</p>
+        <p class="card-text">Tags: {{ course.tags }}</p>
+      </div>
+      <div class="col">
+        <input
+          name="rating"
+          class="review-rating rating mb-2"
+          data-min="0"
+          data-max="5"
+          data-step="0.5"
+          value="{{ course.averageRating }}"
+        />
+      </div>
+    </div>
+    <a class="btn btn-primary stretched-link" href="/courses/{{ course._id }}"
+      >View Course</a
+    >
+  </div>
+</div>

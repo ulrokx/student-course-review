@@ -36,6 +36,7 @@ export const createCourse = async (universityId, params) => {
   const insertedCourse = await coursesCollection.insertOne({
     ...parseResults.data,
     universityId: university_id,
+    universityName: university.name,
   });
 
   if (!insertedCourse.acknowledged) {

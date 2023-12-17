@@ -2,6 +2,7 @@
 
 <h1 class="text-center">Edit {{ university.name }}</h1>
 <main class="container">
+  <a onclick="history.back()" class="btn btn-primary">Back</a>
   {{> university-form buttonText="Edit University" }}
   <hr />
   {{> course-form buttonText="Create Course" }}

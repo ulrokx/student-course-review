@@ -2,10 +2,12 @@ import { Router } from "express";
 import { getUniversities, getUniversity } from "../data/universities.js";
 import { getCourses } from "../data/courses.js";
 import {
+  getCoursesOptionsSchema,
   idSchema,
   searchCourseSchema,
   searchUniversitySchema,
 } from "../data/validation.js";
+import { formatCourses } from "./courses.js";
 
 const router = Router();
 
@@ -34,8 +36,15 @@ router
   })
   .get("/:id", async (req, res) => {
     const { id } = req.params;
-    const { search } = req.query;
-    const parseResults = idSchema.safeParse(id);
+    const { search, sortBy } = req.query;
+    const idParseResults = idSchema.safeParse(id);
+    if (!idParseResults.success) {
+      return res.status(400).render("error", {
+        status: 400,
+        message: idParseResults.error.issues[0].message,
+      });
+    }
+    const parseResults = getCoursesOptionsSchema.safeParse({ search, sortBy });
     if (!parseResults.success) {
       return res.status(400).render("error", {
         status: 400,
@@ -43,21 +52,14 @@ router
       });
     }
     try {
-      const university = await getUniversity(parseResults.data);
-      let courses;
-      if (search) {
-        const parseResults = searchCourseSchema.safeParse(search);
-        if (!parseResults.success) {
-          return res.status(400).render("error", {
-            status: 400,
-            message: parseResults.error.issues[0].message,
-          });
-        }
-        courses = await getCourses({ search, universityId: id });
-      } else {
-        courses = await getCourses({ universityId: id });
-      }
-      res.render("university", { university, courses, search });
+      const university = await getUniversity(id);
+      const courses = await getCourses({ universityId: id, search, sortBy });
+      res.render("university", {
+        university,
+        courses: formatCourses(courses),
+        search,
+        sortBy,
+      });
     } catch (e) {
       res.status(e.status).render("error", e);
     }

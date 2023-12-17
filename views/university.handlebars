@@ -5,37 +5,14 @@
   <h2>{{ university.location }}</h2>
   <hr />
   <h3>Courses:</h3>
-  <form method="GET" id="search-form" class="mb-2">
-    <label for="search-input" class="form-label"
-      >Search by name, code, tag, or professor name</label
-    >
-    <input
-      type="text"
-      id="search-input"
-      name="search"
-      class="form-control"
-      value="{{ search }}"
-    />
-  </form>
+  {{> course-search-form search=search sortBy=sortBy}}
   {{#if search}}
   <h4>Search results for "{{ search }}"</h4>
   {{/if}}
   {{#if courses}}
   <div class="container vstack gap-2">
     {{#each courses as |course|}}
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">{{ course.courseName }}</h5>
-        <p class="card-subtitle">{{ course.courseCode }}</p>
-        <p class="card-text">{{ course.professors }}</p>
-        <p class="card-text">{{ course.tags }}</p>
-        <a
-          class="btn btn-primary stretched-link"
-          href="/courses/{{ course._id }}"
-          >View Course</a
-        >
-      </div>
-    </div>
+    {{> course-card course=course}}
     {{/each}}
   </div>
   {{else}}

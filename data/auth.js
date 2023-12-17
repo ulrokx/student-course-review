@@ -14,9 +14,13 @@ export const register = async (params) => {
   }
   const { email, password, username, universityId } = parseResults.data;
   const usersCollection = await users();
-  const existingUser = await usersCollection.findOne({ email });
+  let existingUser = await usersCollection.findOne({ email });
   if (existingUser) {
     throw { status: 400, message: "Email already in use" };
+  }
+  existingUser = await usersCollection.findOne({ username });
+  if (existingUser) {
+    throw { status: 400, message: "Username already in use" };
   }
   let university = null;
   if (universityId) {
@@ -29,7 +33,7 @@ export const register = async (params) => {
     }
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = {
+  let newUser = {
     email,
     hashedPassword,
     username,
@@ -48,6 +52,8 @@ export const register = async (params) => {
     email,
     username,
     admin: false,
+    universityName: newUser.universityName,
+    universityId: newUser.universityId,
   };
 };
 

@@ -24,7 +24,7 @@ const formatCourse = (course) => {
   return formattedCourse;
 };
 
-const formatCourses = (courses) => courses.map(formatCourse);
+export const formatCourses = (courses) => courses.map(formatCourse);
 
 const getCurrentVote = (review, userId) => {
   if (includesObjectId(review.upvotes, userId)) {

@@ -46,8 +46,12 @@ router
         .json({ message: parseResults.error.issues[0].message });
     }
     try {
-      await register(parseResults.data);
-      return res.redirect("/auth/login");
+      const user = await register(parseResults.data);
+      req.session.user = user;
+      if (user.universityId) {
+        return res.redirect(`/universities/${user.universityId.toString()}`);
+      }
+      return res.redirect("/");
     } catch (e) {
       return res.status(e.status).render("register", {
         error: e.message,
